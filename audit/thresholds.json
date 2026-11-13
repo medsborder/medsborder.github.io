@@ -1,0 +1,11 @@
+{
+  "lighthouse": {
+    "performance": 0.9,
+    "accessibility": 1,
+    "best-practices": 0.95,
+    "seo": 0.95
+  },
+  "axe": {
+    "maxViolations": 0
+  }
+}

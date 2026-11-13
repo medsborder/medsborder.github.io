@@ -26,3 +26,14 @@ See `LICENSE`.
 - GTM container tips: fire Google tags with built-in consent checks (analytics storage), and do not add tags that need `unsafe-inline` or other hosts without updating the CSP meta in every page (a test checks that the inline-script hashes match).
 - The consent record (`localStorage` key `consent`) expires after 180 days.
 - GitHub Pages cannot set HTTP headers, so a `Content-Security-Policy` meta tag is used (it cannot set `frame-ancestors`).
+
+## Quality gates
+
+`just test` runs the unit and static tests (Node, in Docker). `just audit` stages the publishable files into `_site/` and audits them in a real Chromium (Docker, reports in `audit/out/`):
+
+- **axe-core**: WCAG 2.0/2.1/2.2 A and AA plus best practices, on 16 states (language, banner shown or dismissed, results, light and dark, desktop and mobile). Zero violations allowed. Also fails on JavaScript errors, failed requests and Content-Security-Policy violations.
+- **Lighthouse (mobile)**: thresholds in `audit/thresholds.json` (performance and best practices/SEO at least 0.9/0.95, accessibility 1).
+
+In CI (`.github/workflows/pages.yml`) the deploy job needs both `test` and `audit`; a failed gate blocks the deploy, and pull requests run the checks without deploying. The audit server mimics GitHub Pages (gzip, cache headers, 404 page) and serves canonical/OG URLs as the local host so the checks apply. To change thresholds, edit `audit/thresholds.json` and say why in the commit.
+
+Layout shifts matter here: the form and the theme switcher are added by JavaScript, so `#app` and `#theme-slot` reserve their size in `assets/css/main.css`. If you add fields to the form, re-measure and update `#app { min-height }`.

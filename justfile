@@ -25,6 +25,16 @@ assets:
 sitemap:
     docker run --rm -v "$PWD":/work -w /work node:22-alpine node scripts/sitemap.mjs $(date +%F) > sitemap.xml
 
+# Copy the publishable files into _site/
+stage:
+    ./scripts/stage-site.sh
+
+# Accessibility (axe) and Lighthouse audit of the staged site, in Docker. Reports go to audit/out
+audit: stage
+    docker build -t medsborder-audit audit
+    mkdir -p audit/out
+    docker run --rm --shm-size=1g --user $(id -u):$(id -g) -v "$PWD/_site":/site:ro -v "$PWD/audit/out":/audit/out medsborder-audit
+
 # Remove generated files
 clean:
     rm -rf _site

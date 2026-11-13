@@ -98,9 +98,9 @@ test("sitemap is generated from the page list and matches each page's hreflang",
 test("robots.txt points at the sitemap, and the deploy workflow publishes every root file", () => {
   assert.ok(read("robots.txt").includes(`Sitemap: ${SITE}/sitemap.xml`));
   assert.ok(!/Disallow:\s*\/\s*$/m.test(read("robots.txt")));
-  const copy = read(".github/workflows/pages.yml").match(/cp -r (.*) _site\//)[1].split(/\s+/);
+  const copy = read("scripts/stage-site.sh").match(/cp -r (.*) _site\//)[1].split(/\s+/);
   for (const f of ["index.html", "404.html", "robots.txt", "sitemap.xml", "humans.txt", "site.webmanifest", "favicon.ico", "en", "uk", "assets", "data"]) {
-    assert.ok(copy.includes(f), `workflow copies ${f}`);
+    assert.ok(copy.includes(f), `stage-site.sh copies ${f}`);
   }
   assert.ok(read("humans.txt").includes("/* TEAM */"));
 });
