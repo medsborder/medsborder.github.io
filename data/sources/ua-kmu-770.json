@@ -1,0 +1,71 @@
+{
+  "id": "ua-kmu-770",
+  "title": "Resolution of the Cabinet of Ministers of Ukraine No. 770 of 6 May 2000: List of narcotic drugs, psychotropic substances and precursors (edition of 02.10.2026)",
+  "url": "https://zakon.rada.gov.ua/laws/show/770-2000-п",
+  "scope": "country",
+  "countries": ["UKR"],
+  "verifiedAt": "2026-11-13",
+  "license": "Official legislative text; only short list entries are quoted",
+  "entries": [
+    {
+      "substance": "codeine",
+      "status": "restricted",
+      "quote": "Таблиця II, Список N 1 «Наркотичні засоби та рослини, обіг яких обмежено»: Кодеїн",
+      "note": "Control-list classification (circulation restricted), not a personal-import rule. Table III, List 1 lets some low-dose combination preparations (up to 100 mg per dose and 2.5% in undivided preparations) be exempt from some controls."
+    },
+    {
+      "substance": "tramadol",
+      "status": "restricted",
+      "quote": "Таблиця II, Список N 1 «Наркотичні засоби та рослини, обіг яких обмежено»: Трамадол",
+      "note": "Control-list classification (circulation restricted), not a personal-import rule."
+    },
+    {
+      "substance": "morphine",
+      "status": "restricted",
+      "quote": "Таблиця II, Список N 1 «Наркотичні засоби та рослини, обіг яких обмежено»: Морфін",
+      "note": "Control-list classification (circulation restricted), not a personal-import rule."
+    },
+    {
+      "substance": "methylphenidate",
+      "status": "restricted",
+      "quote": "Таблиця II, Список N 2 «Психотропні речовини, обіг яких обмежено»: Метилфенідат",
+      "note": "Control-list classification (circulation restricted), not a personal-import rule."
+    },
+    {
+      "substance": "amphetamine",
+      "status": "restricted",
+      "quote": "Таблиця II, Список N 2 «Психотропні речовини, обіг яких обмежено»: Амфетамін",
+      "note": "Control-list classification (circulation restricted), not a personal-import rule."
+    },
+    {
+      "substance": "diazepam",
+      "status": "restricted",
+      "quote": "Таблиця III, Список N 2 «Психотропні речовини, обіг яких обмежено і стосовно яких допускаються виключення деяких заходів контролю»: Діазепам",
+      "note": "Control-list classification (circulation restricted, some control measures may be excepted), not a personal-import rule."
+    },
+    {
+      "substance": "alprazolam",
+      "status": "restricted",
+      "quote": "Таблиця III, Список N 2 «Психотропні речовини, обіг яких обмежено і стосовно яких допускаються виключення деяких заходів контролю»: Альпразолам",
+      "note": "Control-list classification (circulation restricted, some control measures may be excepted), not a personal-import rule."
+    },
+    {
+      "substance": "zolpidem",
+      "status": "restricted",
+      "quote": "Таблиця III, Список N 2 «Психотропні речовини, обіг яких обмежено і стосовно яких допускаються виключення деяких заходів контролю»: Золпідем (INN)",
+      "note": "Control-list classification (circulation restricted, some control measures may be excepted), not a personal-import rule."
+    },
+    {
+      "substance": "pseudoephedrine",
+      "status": "restricted",
+      "quote": "Таблиця IV, Список N 1 «Прекурсори, обіг яких обмежено і стосовно яких встановлюються заходи контролю»: Псевдоефедрин",
+      "note": "Listed as a precursor (circulation restricted), not a personal-import rule."
+    },
+    {
+      "substance": "cannabis",
+      "status": "restricted",
+      "quote": "Таблиця II, Список N 1 «Наркотичні засоби та рослини, обіг яких обмежено»: Канабіс, смола канабісу, екстракти і настойки канабісу",
+      "note": "Control-list classification (circulation restricted), not a personal-import rule. Industrial and educational cultivation of Cannabis plants is covered separately in Table I, Lists 3 and 4."
+    }
+  ]
+}
