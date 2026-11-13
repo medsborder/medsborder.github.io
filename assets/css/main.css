@@ -225,6 +225,7 @@ body { padding-bottom: calc(1rem + var(--consent-h, 0px)); }
 .quick-label { color: var(--muted); font-size: .9rem; }
 .quick-chip { font: inherit; font-size: .9rem; display: inline-flex; align-items: center; padding: .3rem .75rem; border: 1px dashed var(--accent); border-radius: 999px; background: transparent; color: var(--fg); cursor: pointer; }
 .quick-chip:hover { background: var(--surface); }
+.quick-chip-nodata { border-style: dotted; border-color: var(--muted); color: var(--muted); }
 .timeline-row .stop .flag, .country > summary .flag { margin: 0 .3rem 0 .1rem; }
 .report { margin: .5rem 0 0; font-size: .9rem; }
 .print-only { display: none; }

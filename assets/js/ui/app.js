@@ -6,7 +6,7 @@ import { createPicker } from "./picker.js";
 import { buildMap, routeWarnings, MAX_ROUTE_COUNTRIES } from "../core/buildMap.js";
 import { buildActions, buildTimeline, buildVerdict, ACTION_GROUPS } from "../core/conclusions.js";
 import { worstOf } from "../core/status.js";
-import { coveredCountries } from "../core/coverage.js";
+import { coveredCountries, POPULAR_COUNTRIES } from "../core/coverage.js";
 import { recommendCountries } from "../core/recommend.js";
 import { track } from "../analytics.js";
 import { serializeState, parseState, customToken } from "../core/urlState.js";
@@ -108,10 +108,15 @@ async function init() {
     if (others.some((i) => i.key === item.key) || self.getItems().some((i) => i.key === item.key)) {
       return fmt(t.countryUsed, { name: item.label });
     }
-    const total = routeCodes().length - (self === departure ? self.getItems().length : 0);
-    if (total >= MAX_ROUTE_COUNTRIES) return fmt(t.routeFull, { n: MAX_ROUTE_COUNTRIES });
+    if (routeCodes().length - (isSingle(self) ? self.getItems().length : 0) >= slotsFor(self)) {
+      return fmt(t.routeFull, { n: MAX_ROUTE_COUNTRIES });
+    }
     return null;
   }
+  // departure and destination hold one country each; an empty one keeps its slot free
+  const isSingle = (p) => p === departure || p === destinations;
+  const slotsFor = (self) => MAX_ROUTE_COUNTRIES
+    - [departure, destinations].filter((p) => p !== self && p.getItems().length === 0).length;
 
   // ---------- pickers ----------
   const common = { t };
@@ -135,21 +140,25 @@ async function init() {
     canAdd: (i) => countryCanAdd(i, layovers), onChange: changed, iconFor: countryIcon,
   });
   const destinations = createPicker({
-    ...common, label: t.destinations, hint: t.destinationsHint, search: countrySearch,
+    ...common, label: t.destinations, hint: t.destinationsHint, single: true, search: countrySearch,
     canAdd: (i) => countryCanAdd(i, destinations), onChange: changed, iconFor: countryIcon,
   });
 
   // ---------- quick picks: one tap instead of typing ----------
-  function quickRow(label, entries, picker, iconOf) {
+  function quickRow(label, entries, picker, iconOf, extra = null) {
     const row = h("div", { class: "quick" });
     const refresh = () => {
       const chosen = new Set([...meds.getItems(), ...departure.getItems(), ...layovers.getItems(), ...destinations.getItems()].map((i) => i.key));
-      const shown = entries.filter((e) => !chosen.has(e.key));
-      row.hidden = shown.length === 0;
-      row.replaceChildren(h("span", { class: "quick-label" }, label), ...shown.map((e) => h("button", {
-        type: "button", class: "quick-chip",
+      const chip = (e, cls = "") => h("button", {
+        type: "button", class: `quick-chip ${cls}`.trim(),
         onclick: () => { if (picker.add({ ...e }) === null) picker.focus(); },
-      }, iconOf(e), e.label)));
+      }, iconOf(e), e.label);
+      const shown = entries.filter((e) => !chosen.has(e.key));
+      const more = (extra?.entries ?? []).filter((e) => !chosen.has(e.key));
+      row.hidden = shown.length + more.length === 0;
+      row.replaceChildren(
+        ...(shown.length ? [h("span", { class: "quick-label" }, label), ...shown.map((e) => chip(e))] : []),
+        ...(more.length ? [h("span", { class: "quick-label" }, extra.label), ...more.map((e) => chip(e, "quick-chip-nodata"))] : []));
     };
     return { el: row, refresh };
   }
@@ -157,9 +166,12 @@ async function init() {
     .map((s) => ({ key: s.id, label: displayName(s, lang), category: s.category })), meds,
   (e) => icon(e.category ?? "globe", { size: 16 }));
   const coveredEntries = countries.filter((c) => covered.has(c.alpha3)).map((c) => ({ key: c.alpha3, label: countryName(c.alpha3) }));
-  const quickFrom = quickRow(t.countriesWithData, coveredEntries, departure, (e) => flag(e.key));
-  const quickTo = quickRow(t.countriesWithData, coveredEntries, destinations, (e) => flag(e.key));
-  const quickAll = [quickMeds, quickFrom, quickTo];
+  const popular = { label: t.popularNoData, entries: POPULAR_COUNTRIES.filter((c) => countryByCode.has(c) && !covered.has(c)).map((c) => ({ key: c, label: countryName(c) })) };
+  const countryQuick = (picker) => quickRow(t.countriesWithData, coveredEntries, picker, (e) => flag(e.key), popular);
+  const quickFrom = countryQuick(departure);
+  const quickVia = countryQuick(layovers);
+  const quickTo = countryQuick(destinations);
+  const quickAll = [quickMeds, quickFrom, quickVia, quickTo];
 
   // ---------- coverage list (home page, below the form) ----------
   const coverageEl = document.getElementById("coverage-list");
@@ -231,7 +243,7 @@ async function init() {
     meds.setItems(ingredients(st.ingredients));
     departure.setItems(places(st.from ? [st.from] : []));
     layovers.setItems(places(st.via));
-    destinations.setItems(places(st.to));
+    destinations.setItems(places(st.to.slice(0, 1)));
     if (layovers.getItems().length) layoverDetails.open = true;
     sync();
   }
@@ -254,7 +266,7 @@ async function init() {
   const backBtn = h("button", { type: "button", class: "btn", onclick: () => show(1, "push") }, t.back);
   const routeList = h("ol", { class: "route-strip", "aria-live": "polite" });
   const routeNote = h("p", { class: "hint" });
-  const layoverDetails = h("details", { class: "layovers" }, h("summary", {}, t.layoversSummary), layovers.el);
+  const layoverDetails = h("details", { class: "layovers" }, h("summary", {}, t.layoversSummary), layovers.el, quickVia.el);
   const title1 = h("h2", { id: "step-1-title", tabindex: "-1" }, t.ingredientsTitle);
   const title2 = h("h2", { id: "step-2-title", tabindex: "-1" }, t.routeTitle);
 
@@ -306,9 +318,7 @@ async function init() {
   }
 
   function sync() {
-    const full = routeCodes().length >= MAX_ROUTE_COUNTRIES;
-    layovers.setDisabled(full, fmt(t.routeFull, { n: MAX_ROUTE_COUNTRIES }));
-    destinations.setDisabled(full, fmt(t.routeFull, { n: MAX_ROUTE_COUNTRIES }));
+    layovers.setDisabled(routeCodes().length >= slotsFor(layovers), fmt(t.routeFull, { n: MAX_ROUTE_COUNTRIES }));
     for (const [btn, ok, msg] of [[nextBtn, canStep2(), msg1], [checkBtn, canSubmit(), msg2]]) {
       btn.setAttribute("aria-disabled", String(!ok));
       btn.classList.toggle("disabled", !ok);

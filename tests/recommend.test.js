@@ -40,3 +40,12 @@ test("a custom ingredient (no data) yields no recommendation", () => {
 test("coveredCountries lists every country that has a source", () => {
   assert.deepStrictEqual([...coveredCountries(sources)].sort(), ["AAA", "BBB", "CCC", "DDD", "HHH"]);
 });
+
+import { POPULAR_COUNTRIES } from "../assets/js/core/coverage.js";
+import { readJson } from "./helpers.js";
+
+test("popular quick-pick countries exist, are not hidden and are listed once", () => {
+  const all = new Map(readJson("data/countries.json").map((c) => [c.alpha3, c]));
+  assert.strictEqual(new Set(POPULAR_COUNTRIES).size, POPULAR_COUNTRIES.length);
+  for (const code of POPULAR_COUNTRIES) assert.ok(all.has(code) && !all.get(code).hidden, code);
+});

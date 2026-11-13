@@ -57,7 +57,12 @@ export async function runE2E({ browser, base, fail }) {
     await type(2, w.via);
     await type(3, w.to);
     ok((await pg.$$eval(".route-strip .stop", (els) => els.length)) === 3, L("route preview has 3 stops"));
-    ok((await pg.$$(".quick-chip")).length >= 1, L("quick country picks"));
+    ok((await pg.$$(".quick")).length >= 4 && (await pg.$$(".quick-chip-nodata")).length >= 1, L("quick picks for every country field, with popular ones that have no data"));
+    // only one destination: picking another one replaces the first
+    await type(3, lang === "en" ? "France" : "Франція");
+    ok((await pg.$$eval(".route-strip .stop-destination", (els) => els.length)) === 1, L("only one destination"));
+    await type(3, w.to);
+    ok((await pg.$$eval(".route-strip .stop-destination .stop-name", (els) => els.map((e) => e.textContent)))[0] === w.to, L("the destination was replaced"));
     await submit();
     await pg.waitForSelector("#results:not([hidden]) .verdict");
 
@@ -113,6 +118,13 @@ export async function runE2E({ browser, base, fail }) {
   await old.goto(`${base}/en/#r=codeine&o=melatonin&from=UKR&to=DEU`, { waitUntil: "networkidle0" });
   ok((await old.$$(".timeline-row")).length === 2, "old link with o= shows both ingredients");
   await old.close();
+
+  // an old link with several destinations keeps only the first one
+  const multi = await browser.newPage();
+  await multi.evaluateOnNewDocument(CONSENT);
+  await multi.goto(`${base}/en/#r=codeine&from=UKR&to=DEU,POL,FRA`, { waitUntil: "networkidle0" });
+  ok((await multi.$$(".timeline-row .stop")).length === 2, "old link with several destinations keeps only the first");
+  await multi.close();
 
   console.log(`${count} end-to-end checks run`);
 }
