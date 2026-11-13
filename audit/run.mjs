@@ -14,7 +14,7 @@ const OUT_DIR = process.env.OUT_DIR ?? "/audit/out";
 const PROD = "https://medsborder.github.io";
 const thresholds = JSON.parse(await fs.readFile(new URL("./thresholds.json", import.meta.url), "utf8"));
 const CHROME = process.env.CHROME_PATH ?? "/usr/bin/chromium";
-const CHROME_FLAGS = ["--headless=new", "--no-sandbox", "--disable-gpu", "--disable-dev-shm-usage"];
+const CHROME_FLAGS = ["--headless=new", "--no-sandbox", "--disable-gpu", "--disable-dev-shm-usage", "--disable-crash-reporter"];
 await fs.mkdir(OUT_DIR, { recursive: true });
 
 // ---------- static server that behaves like GitHub Pages ----------
