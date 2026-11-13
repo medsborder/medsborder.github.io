@@ -29,6 +29,7 @@ async function bundle(prefix, contents) {
 }
 const app = await bundle("app", 'import "./ui/app.js"; import "./consent.js";');
 const consent = await bundle("consent", 'import "./consent.js";');
+const landing = await bundle("landing", 'import "./landing.js"; import "./consent.js";');
 rmSync(path.join(assets, "js"), { recursive: true, force: true });
 
 // html
@@ -40,6 +41,6 @@ function* htmlFiles(dir) {
   }
 }
 for (const f of htmlFiles(site)) {
-  writeFileSync(f, rewriteHtml(readFileSync(f, "utf8"), { app, consent, data: dataName }));
+  writeFileSync(f, rewriteHtml(readFileSync(f, "utf8"), { app, consent, landing, data: dataName }));
 }
-console.log(`built: ${app}, ${consent}, ${dataName}`);
+console.log(`built: ${app}, ${consent}, ${landing}, ${dataName}`);

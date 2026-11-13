@@ -18,19 +18,25 @@ export function bundleData(dataDir) {
 }
 
 const APP_TAG = /<script type="module" src="([^"]*?)assets\/js\/ui\/app\.js"><\/script>/;
+const LANDING_TAG = /<script type="module" src="([^"]*?)assets\/js\/landing\.js"><\/script>/;
 const CONSENT_TAG = /([ \t]*)<script type="module" src="([^"]*?)assets\/js\/consent\.js"><\/script>\n?/;
 
 /**
  * Points a page at the bundles. Checker pages get the app bundle (it already
  * contains the consent code) plus a preload for the data; other pages only get
- * the consent bundle. Relative prefixes (`../`, `/`) are kept as they were.
+ * the consent bundle; the language landing page gets its own small bundle (landing + consent).
+ * Relative prefixes (`../`, `/`) are kept as they were.
  */
-export function rewriteHtml(html, { app, consent, data }) {
+export function rewriteHtml(html, { app, consent, data, landing }) {
   const appMatch = html.match(APP_TAG);
   if (appMatch) {
     const prefix = appMatch[1];
     const tags = `<link rel="preload" href="${prefix}assets/${data}" as="fetch" crossorigin>\n  <script type="module" src="${prefix}assets/${app}"></script>`;
     return html.replace(APP_TAG, tags).replace(CONSENT_TAG, "");
+  }
+  const landingMatch = html.match(LANDING_TAG);
+  if (landingMatch) {
+    return html.replace(LANDING_TAG, `<script type="module" src="${landingMatch[1]}assets/${landing}"></script>`).replace(CONSENT_TAG, "");
   }
   return html.replace(CONSENT_TAG, (_, indent, prefix) => `${indent}<script type="module" src="${prefix}assets/${consent}"></script>\n`);
 }

@@ -230,6 +230,24 @@ body { padding-bottom: calc(1rem + var(--consent-h, 0px)); }
 .report { margin: .5rem 0 0; font-size: .9rem; }
 .print-only { display: none; }
 
+/* ---- landing and example result ---- */
+a.btn { display: inline-block; text-decoration: none; }
+.hero-split { display: grid; gap: 1.25rem 1.5rem; grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr); align-items: start; }
+.hero-split .hero-text h1 { margin-top: 0; }
+.example { background: var(--card-bg); border: 1px solid var(--border); border-radius: 12px; box-shadow: var(--shadow); padding: .75rem 1rem 1rem; }
+.example-title { margin: 0 0 .5rem; }
+.example .verdict { margin: .25rem 0 .5rem; padding: .5rem .75rem; }
+.example .verdict-title { font-size: 1.05rem; }
+.example-list { list-style: none; margin: 0; padding: 0; display: grid; gap: .4rem; }
+.example-list li { display: flex; gap: .5rem; align-items: baseline; padding: .4rem .6rem; border-radius: 8px; }
+.landing-cols { display: grid; gap: 1rem; grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.landing-col { margin: 0; }
+.landing-col h2 { margin-top: 0; font-size: 1.6rem; line-height: 1.2; }
+.landing-col h3 { margin: 1.25rem 0 .25rem; }
+.landing-steps { margin: .25rem 0 .75rem; padding-left: 1.2rem; }
+.landing-col .example { margin-top: 1rem; }
+@media (max-width: 800px) { .hero-split, .landing-cols { grid-template-columns: 1fr; } }
+
 /* ---- sources page ---- */
 .status-legend { display: grid; grid-template-columns: max-content 1fr; gap: .6rem 1rem; align-items: baseline; }
 .status-legend dd { margin: 0; }

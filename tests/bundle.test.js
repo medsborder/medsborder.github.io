@@ -34,3 +34,12 @@ test("content hashes are short, stable and content-dependent", () => {
   assert.notStrictEqual(contentHash("a"), contentHash("b"));
   assert.match(contentHash("a"), /^[0-9a-f]{10}$/);
 });
+
+test("the landing page gets the landing bundle instead of the separate consent script", () => {
+  const html = `  <script type="module" src="assets/js/landing.js"></script>
+  <script type="module" src="assets/js/consent.js"></script>
+</head>`;
+  const out = rewriteHtml(html, { ...names, landing: "landing.xyz.js" });
+  assert.ok(out.includes('<script type="module" src="assets/landing.xyz.js"></script>'));
+  assert.ok(!out.includes("consent") && !out.includes("assets/js/"));
+});

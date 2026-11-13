@@ -126,5 +126,28 @@ export async function runE2E({ browser, base, fail }) {
   ok((await multi.$$(".timeline-row .stop")).length === 2, "old link with several destinations keeps only the first");
   await multi.close();
 
+  // the root page: two language columns, each with an example result, and a language hint only for Ukrainian browsers
+  const root = await browser.newPage();
+  await root.evaluateOnNewDocument(CONSENT);
+  await root.goto(`${base}/`, { waitUntil: "networkidle0" });
+  ok((await root.$$(".landing-col")).length === 2 && (await root.$$(".landing-col .example")).length === 2, "root: two language columns with an example result each");
+  ok((await root.$$eval(".landing-col a.btn", (as) => as.map((a) => a.getAttribute("href")))).join() === "en/,uk/", "root: a button into each language");
+  ok(await root.$eval("#lang-hint", (e) => e.hidden), "root: no language hint for an English browser");
+  await root.close();
+  const rootUk = await browser.newPage();
+  await rootUk.evaluateOnNewDocument(CONSENT);
+  await rootUk.evaluateOnNewDocument(() => Object.defineProperty(navigator, "languages", { get: () => ["uk-UA", "en"] }));
+  await rootUk.goto(`${base}/`, { waitUntil: "networkidle0" });
+  ok(!(await rootUk.$eval("#lang-hint", (e) => e.hidden)) && (await rootUk.$eval("#lang-hint a", (a) => a.getAttribute("href"))) === "uk/", "root: language hint for a Ukrainian browser, no redirect");
+  ok(rootUk.url() === `${base}/`, "root: no forced redirect");
+  await rootUk.close();
+  for (const lang of ["en", "uk"]) {
+    const page = await browser.newPage();
+    await page.evaluateOnNewDocument(CONSENT);
+    await page.goto(`${base}/${lang}/`, { waitUntil: "networkidle0" });
+    ok((await page.$$(".hero .example .example-list li")).length === 3, `${lang}: example result in the hero`);
+    await page.close();
+  }
+
   console.log(`${count} end-to-end checks run`);
 }
