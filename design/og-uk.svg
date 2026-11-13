@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" font-family="DejaVu Sans, sans-serif">
+  <rect width="1200" height="630" fill="#0f172a"/>
+  <rect width="16" height="630" fill="#1d4ed8"/>
+  <g transform="translate(80 70) scale(0.3)">
+    <rect width="512" height="512" rx="112" fill="#1d4ed8"/>
+    <g transform="rotate(-45 256 256)">
+      <rect x="96" y="184" width="320" height="144" rx="72" fill="#ffffff"/>
+      <path d="M256 184h88a72 72 0 0 1 0 144h-88z" fill="#93c5fd"/>
+      <rect x="251" y="184" width="10" height="144" fill="#1d4ed8"/>
+    </g>
+  </g>
+  <text x="260" y="175" font-size="84" font-weight="700" fill="#ffffff">MedsBorder</text>
+  <text x="80" y="330" font-size="54" font-weight="700" fill="#ffffff">Перевірка ліків для подорожі</text>
+  <text x="80" y="400" font-size="32" fill="#cbd5e1">Перевірте, чи дозволені ваші ліки, чи потрібен</text>
+  <text x="80" y="446" font-size="32" fill="#cbd5e1">рецепт або вони заборонені на вашому маршруті.</text>
+  <circle cx="94" cy="545" r="16" fill="#22c55e"/><text x="124" y="556" font-size="30" fill="#e2e8f0">Дозволено</text>
+  <circle cx="414" cy="545" r="16" fill="#f59e0b"/><text x="444" y="556" font-size="30" fill="#e2e8f0">За рецептом</text>
+  <circle cx="774" cy="545" r="16" fill="#ef4444"/><text x="804" y="556" font-size="30" fill="#e2e8f0">Заборонено</text>
+</svg>
