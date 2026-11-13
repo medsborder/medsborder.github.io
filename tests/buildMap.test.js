@@ -94,3 +94,13 @@ test("routeWarnings: no warning when equal or only one known", () => {
   const m = buildMap({ departure: "AAA", destinations: ["BBB", "CCC"] }, ["x"], sources, NOW);
   assert.deepStrictEqual(routeWarnings(m), []);
 });
+
+test("routeWarnings: neighbouring steps are not notable, wider gaps are", () => {
+  const mk = (a, b) => buildMap(
+    { departure: "AAA", destinations: ["BBB"] }, ["x"],
+    [src("a", "country", ["AAA"], [["x", a]]), src("b", "country", ["BBB"], [["x", b]])], NOW);
+  assert.deepStrictEqual(routeWarnings(mk("prescription", "restricted")), []);
+  assert.deepStrictEqual(routeWarnings(mk("restricted", "banned")), []);
+  assert.strictEqual(routeWarnings(mk("prescription", "banned")).length, 1);
+  assert.strictEqual(routeWarnings(mk("allowed", "prescription")).length, 1);
+});

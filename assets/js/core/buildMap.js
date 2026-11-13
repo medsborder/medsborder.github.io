@@ -91,6 +91,15 @@ export function buildMap(route, substanceIds, sources, now = new Date()) {
 }
 
 /**
+ * A neighbouring step (e.g. prescription vs restricted) is not worth a
+ * warning; a gap of two or more steps, or "allowed" next to anything
+ * stricter, is.
+ */
+export function isNotableGap(min, max) {
+  return max - min >= 2 || (min === 0 && max >= 1);
+}
+
+/**
  * Warnings for substances whose known statuses differ between route
  * countries (e.g. allowed in one, banned in another). Unknown is ignored
  * but listed. `substanceMeta` (optional) lets common items sort first.
@@ -110,6 +119,7 @@ export function routeWarnings(map, substanceMeta = []) {
     if (new Set(ranks).size < 2) continue;
     const min = Math.min(...ranks);
     const max = Math.max(...ranks);
+    if (!isNotableGap(min, max)) continue;
     warnings.push({
       substance: id,
       common: meta.get(id)?.common ?? false,
