@@ -134,3 +134,11 @@ body { padding-bottom: calc(1rem + var(--consent-h, 0px)); }
 .faq details { border: 1px solid var(--border); border-radius: 8px; padding: .5rem .9rem; margin: .5rem 0; }
 .faq details[open] { background: var(--surface); }
 .faq p { margin: .5rem 0; }
+
+/* Reserve the height of the form (rendered by JS) so the content below does not jump (CLS).
+   Measured: ~54rem on desktop, ~66rem on phones (longest hints, Ukrainian). */
+#app { min-height: 56rem; }
+@media (max-width: 600px) { #app { min-height: 66rem; } }
+
+/* The theme switcher is added by JS; reserve its size so the header does not change height. */
+#theme-slot { display: inline-flex; align-items: center; gap: .4rem; min-width: 11rem; min-height: 2.4rem; }
