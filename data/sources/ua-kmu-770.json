@@ -3,7 +3,9 @@
   "title": "Resolution of the Cabinet of Ministers of Ukraine No. 770 of 6 May 2000: List of narcotic drugs, psychotropic substances and precursors (edition of 02.10.2026)",
   "url": "https://zakon.rada.gov.ua/laws/show/770-2000-п",
   "scope": "country",
-  "countries": ["UKR"],
+  "countries": [
+    "UKR"
+  ],
   "verifiedAt": "2026-11-13",
   "license": "Official legislative text; only short list entries are quoted",
   "entries": [
@@ -66,6 +68,12 @@
       "status": "restricted",
       "quote": "Таблиця II, Список N 1 «Наркотичні засоби та рослини, обіг яких обмежено»: Канабіс, смола канабісу, екстракти і настойки канабісу",
       "note": "Control-list classification (circulation restricted), not a personal-import rule. Industrial and educational cultivation of Cannabis plants is covered separately in Table I, Lists 3 and 4."
+    },
+    {
+      "substance": "poppy-seeds",
+      "status": "allowed",
+      "quote": "Таблиця I, Список N 1: Макова солома, концентрат з макової соломи: усі частини, цілі чи подрібнені (за винятком дозрілого насіння), рослини виду мак снотворний, зібрані будь-яким способом, що містять алкалоїди",
+      "note": "Mature poppy seeds are expressly excluded from the definition of poppy straw, so they are not controlled by this list. Customs, food and quantity rules were not checked; this does not cover poppy straw or concentrate."
     }
   ]
 }
