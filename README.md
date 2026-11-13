@@ -8,7 +8,7 @@ Everything runs in the browser. Entered ingredients are never sent to any server
 
 ## Status
 
-Planning and foundation (stage 1). See `CLAUDE.md` for the product requirements.
+Working MVP with data for Ukraine, Germany, Poland and France. See [ROADMAP.md](ROADMAP.md) for what is missing and `CLAUDE.md` for the product requirements.
 
 ## Inspiration
 
