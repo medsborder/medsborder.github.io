@@ -53,6 +53,12 @@ async function loadData() {
 }
 
 // ---------- app ----------
+// How bad a status is for the traveller. "unknown" sits above "allowed" on purpose:
+// no data never reads as allowed.
+const SEVERITY = { allowed: 0, unknown: 1, prescription: 2, restricted: 3, banned: 4 };
+const worstOf = (statuses) => statuses.reduce((a, b) => (SEVERITY[b] > SEVERITY[a] ? b : a), "allowed");
+const VERDICT_KEY = { banned: "verdictBanned", prescription: "verdictPrescription", unknown: "verdictUnknown", allowed: "verdictAllowed" };
+
 async function init() {
   const slot = document.getElementById("app");
   initTheme(document.getElementById("theme-slot"));
@@ -77,15 +83,15 @@ async function init() {
   const ingredientLabel = (it) => it.label;
   const ingredientEnglish = (it) => (it.custom ? it.text : substanceById.get(it.key).names.en[0]);
 
-  // pickers
   const routeCodes = () => [
     ...departure.getItems(), ...layovers.getItems(), ...destinations.getItems(),
   ].map((i) => i.key);
+  const requiredItems = () => meds.getItems().filter((i) => !i.optional);
+  const optionalItems = () => meds.getItems().filter((i) => i.optional);
 
   function ingredientCanAdd(item) {
     const id = ingredientId(item);
-    const all = [...required.getItems(), ...optional.getItems()];
-    if (all.some((i) => ingredientId(i) === id)) return fmt(t.alreadyAdded, { name: item.label });
+    if (meds.getItems().some((i) => ingredientId(i) === id)) return fmt(t.alreadyAdded, { name: item.label });
     if (item.custom) {
       const n = normalize(item.text);
       if (sIndex.some((e) => e.norm.includes(n))) return t.alreadyKnown;
@@ -103,53 +109,65 @@ async function init() {
     return null;
   }
 
+  // ---------- pickers ----------
   const common = { t };
-  const ingredientSearch = () => (q) => search(sIndex, q, {
-    exclude: new Set([...required.getItems(), ...optional.getItems()].filter((i) => !i.custom).map((i) => i.key)),
-  });
-  const required = createPicker({
-    ...common, label: t.required, hint: t.requiredHint, allowCustom: true,
-    customLabel: (q) => fmt(t.addCustom, { q }), search: ingredientSearch(), canAdd: ingredientCanAdd, onChange: sync,
-  });
-  const optional = createPicker({
-    ...common, label: t.optional, hint: t.optionalHint, allowCustom: true,
-    customLabel: (q) => fmt(t.addCustom, { q }), search: ingredientSearch(), canAdd: ingredientCanAdd, onChange: sync,
+  const meds = createPicker({
+    ...common, label: t.ingredients, hint: t.ingredientsHint, allowCustom: true,
+    customLabel: (q) => fmt(t.addCustom, { q }), canAdd: ingredientCanAdd, onChange: changed,
+    search: (q) => search(sIndex, q, {
+      exclude: new Set(meds.getItems().filter((i) => !i.custom).map((i) => i.key)),
+    }),
+    chipMode: { required: t.mustHave, optional: t.niceToHave, label: (it, mode) => fmt(t.modeLabel, { name: it.label, mode }) },
   });
   const countrySearch = (q) => search(cIndex, q, { exclude: new Set(routeCodes()) });
   const departure = createPicker({
     ...common, label: t.departure, hint: t.departureHint, single: true, search: countrySearch,
-    canAdd: (i) => countryCanAdd(i, departure), onChange: sync,
+    canAdd: (i) => countryCanAdd(i, departure), onChange: changed,
   });
   const layovers = createPicker({
     ...common, label: t.layovers, hint: t.layoversHint, search: countrySearch,
-    canAdd: (i) => countryCanAdd(i, layovers), onChange: sync,
+    canAdd: (i) => countryCanAdd(i, layovers), onChange: changed,
   });
   const destinations = createPicker({
     ...common, label: t.destinations, hint: t.destinationsHint, search: countrySearch,
-    canAdd: (i) => countryCanAdd(i, destinations), onChange: sync,
+    canAdd: (i) => countryCanAdd(i, destinations), onChange: changed,
   });
 
   // ---------- shareable state (URL fragment) ----------
+  // The fragment holds the form state and, while the user is still filling it in, the step.
+  // Results have no "step" part, so links shared from older versions keep working.
   const tokenOf = (i) => (i.custom ? customToken(i.text) : i.key);
   const uiState = () => ({
-    required: required.getItems().map(tokenOf),
-    optional: optional.getItems().map(tokenOf),
+    required: requiredItems().map(tokenOf),
+    optional: optionalItems().map(tokenOf),
     from: departure.getItems()[0]?.key ?? null,
     via: layovers.getItems().map((i) => i.key),
     to: destinations.getItems().map((i) => i.key),
   });
   const langLink = document.querySelector(".site-header a[hreflang]");
   const langBase = langLink?.getAttribute("href") ?? "";
+  const rawHash = () => location.hash.replace(/^#/, "");
+  const stepOf = (raw) => { const m = /(?:^|&)step=([12])(?:&|$)/.exec(raw); return m ? Number(m[1]) : null; };
+  const stateOf = (raw) => raw.split("&").filter((x) => !x.startsWith("step=")).join("&");
 
-  function persist() {
-    const frag = serializeState(uiState());
-    try { history.replaceState(null, "", frag ? `#${frag}` : location.pathname + location.search); } catch { /* ignore */ }
-    langLink?.setAttribute("href", frag ? `${langBase}#${frag}` : langBase);
+  let step = 1;
+  const fragment = () => {
+    const f = serializeState(uiState());
+    return step < 3 && f ? `${f}&step=${step}` : f;
+  };
+  function persist(mode = "replace") {
+    const f = fragment();
+    try {
+      const url = f ? `#${f}` : location.pathname + location.search;
+      if (mode === "push" && rawHash() !== f) history.pushState(null, "", url);
+      else history.replaceState(null, "", url);
+    } catch { /* ignore */ }
+    langLink?.setAttribute("href", f ? `${langBase}#${f}` : langBase);
   }
 
   function applyState(st) {
     const ids = new Set();
-    const ingredients = (tokens) => tokens.flatMap((tok) => {
+    const ingredients = (tokens, optional) => tokens.flatMap((tok) => {
       let item;
       if (tok.startsWith("~")) {
         const text = tok.slice(1);
@@ -163,7 +181,7 @@ async function init() {
       const id = ingredientId(item);
       if (ids.has(id)) return [];
       ids.add(id);
-      return [item];
+      return [optional ? { ...item, optional: true } : item];
     });
     const used = new Set();
     let budget = MAX_ROUTE_COUNTRIES;
@@ -173,28 +191,44 @@ async function init() {
       budget -= 1;
       return [{ key: code, label: countryName(code) }];
     });
-    required.setItems(ingredients(st.required));
-    optional.setItems(ingredients(st.optional));
+    meds.setItems([...ingredients(st.required, false), ...ingredients(st.optional, true)]);
     departure.setItems(places(st.from ? [st.from] : []));
     layovers.setItems(places(st.via));
     destinations.setItems(places(st.to));
+    if (layovers.getItems().length) layoverDetails.open = true;
     sync();
   }
 
-  const canSubmit = () =>
-    required.getItems().length >= 1 && departure.getItems().length === 1 && destinations.getItems().length >= 1;
+  const canStep2 = () => requiredItems().length >= 1;
+  const canSubmit = () => canStep2() && departure.getItems().length === 1 && destinations.getItems().length >= 1;
 
-  function restoreFromHash() {
-    const next = location.hash.replace(/^#/, "");
-    if (next === serializeState(uiState())) return;
-    applyState(parseState(location.hash));
-    if (canSubmit()) render();
-    else { results.hidden = true; results.replaceChildren(); }
+  function restoreFromHash(focus = false) {
+    const raw = rawHash();
+    if (stateOf(raw) !== serializeState(uiState())) applyState(parseState(raw));
+    show(stepOf(raw) ?? (canSubmit() ? 3 : canStep2() ? 2 : 1), "none", focus);
   }
 
-  const submit = h("button", { type: "submit", class: "btn primary", id: "check-btn", "aria-describedby": "submit-hint" }, t.check);
-  const resetBtn = h("button", { type: "button", class: "btn", onclick: reset }, t.reset);
-  const submitHint = h("p", { id: "submit-hint", class: "hint" }, t.submitNeeds);
+  // ---------- wizard shell ----------
+  const stepper = h("ol", { class: "steps" });
+  const msg1 = h("p", { class: "field-msg error", role: "alert" });
+  const msg2 = h("p", { class: "field-msg error", role: "alert" });
+  const nextBtn = h("button", { type: "submit", class: "btn primary" }, t.next);
+  const checkBtn = h("button", { type: "submit", class: "btn primary" }, t.check);
+  const backBtn = h("button", { type: "button", class: "btn", onclick: () => show(1, "push") }, t.back);
+  const routeList = h("ol", { class: "route-strip", "aria-live": "polite" });
+  const layoverDetails = h("details", { class: "layovers" }, h("summary", {}, t.layoversSummary), layovers.el);
+  const title1 = h("h2", { id: "step-1-title", tabindex: "-1" }, t.ingredientsTitle);
+  const title2 = h("h2", { id: "step-2-title", tabindex: "-1" }, t.routeTitle);
+
+  const panel1 = h("section", { class: "step-panel", "aria-labelledby": "step-1-title" },
+    title1, h("p", { class: "hint" }, t.modeHelp), meds.el, msg1,
+    h("div", { class: "actions" }, nextBtn));
+  const panel2 = h("section", { class: "step-panel", "aria-labelledby": "step-2-title", hidden: true },
+    title2, departure.el, layoverDetails, destinations.el,
+    h("div", { class: "route-preview" }, h("p", { class: "link-title" }, t.routePreview), routeList),
+    msg2,
+    h("div", { class: "actions" }, backBtn, checkBtn));
+
   const results = h("section", {
     id: "results", "aria-labelledby": "results-title", hidden: true,
     onclick: (e) => {
@@ -203,50 +237,92 @@ async function init() {
     },
   });
 
-  const form = h("form", { id: "check-form", novalidate: true, onsubmit: onSubmit },
-    h("fieldset", {}, h("legend", {}, lang === "uk" ? "Інгредієнти" : "Ingredients"), required.el, optional.el),
-    h("fieldset", {}, h("legend", {}, t.resultsRoute), departure.el, layovers.el, destinations.el),
-    h("div", { class: "actions" }, submit, resetBtn),
-    submitHint);
+  const form = h("form", { id: "check-form", novalidate: true, onsubmit: onSubmit }, panel1, panel2);
+  slot.replaceChildren(h("nav", { "aria-label": t.stepsLabel }, stepper), form, results);
 
-  slot.replaceChildren(form, results);
+  function renderStepper() {
+    stepper.replaceChildren(...t.step.map((name, i) => {
+      const n = i + 1;
+      const reachable = n === 1 || (n === 2 && canStep2()) || (n === 3 && canSubmit());
+      return h("li", { class: n === step ? "current" : n < step ? "done" : "" },
+        h("button", {
+          type: "button", class: "step-btn", disabled: !reachable, "aria-current": n === step ? "step" : null,
+          onclick: () => show(n, "push"),
+        }, h("span", { class: "step-num", "aria-hidden": "true" }, n === step || n > step ? n : "✓"), " ", name));
+    }));
+  }
+
+  function renderRoute() {
+    const stops = [
+      ...departure.getItems().map((i) => [i, "departure"]),
+      ...layovers.getItems().map((i) => [i, "transit"]),
+      ...destinations.getItems().map((i) => [i, "destination"]),
+    ];
+    routeList.replaceChildren(...(stops.length
+      ? stops.map(([i, role]) => h("li", { class: `stop stop-${role}` },
+        h("span", { class: "stop-name" }, i.label), " ", h("span", { class: "role" }, t.roles[role])))
+      : [h("li", { class: "muted" }, t.routeEmpty)]));
+  }
 
   function sync() {
-    const total = routeCodes().length;
-    const full = total >= MAX_ROUTE_COUNTRIES;
+    const full = routeCodes().length >= MAX_ROUTE_COUNTRIES;
     layovers.setDisabled(full, fmt(t.routeFull, { n: MAX_ROUTE_COUNTRIES }));
     destinations.setDisabled(full, fmt(t.routeFull, { n: MAX_ROUTE_COUNTRIES }));
-    const ok = canSubmit();
-    submit.setAttribute("aria-disabled", String(!ok));
-    submit.classList.toggle("disabled", !ok);
-    submitHint.hidden = ok;
+    for (const [btn, ok, msg] of [[nextBtn, canStep2(), msg1], [checkBtn, canSubmit(), msg2]]) {
+      btn.setAttribute("aria-disabled", String(!ok));
+      btn.classList.toggle("disabled", !ok);
+      if (ok) msg.textContent = "";
+    }
+    renderRoute();
+    renderStepper();
+  }
+
+  function changed() {
+    sync();
+    persist("replace");
+  }
+
+  /** Goes to a step (clamped to what the data allows). mode: "push" | "replace" | "none" (history). */
+  function show(n, mode = "push", focus = true) {
+    step = n >= 3 && canSubmit() ? 3 : n >= 2 && canStep2() ? 2 : 1;
+    panel1.hidden = step !== 1;
+    panel2.hidden = step !== 2;
+    form.hidden = step === 3;
+    if (step === 3) render();
+    else { results.hidden = true; results.replaceChildren(); }
+    sync();
+    if (mode !== "none") persist(mode);
+    if (focus) document.getElementById(step === 3 ? "results-title" : `step-${step}-title`)?.focus();
   }
 
   function reset() {
-    [required, optional, departure, layovers, destinations].forEach((p) => p.clear());
-    results.hidden = true;
-    results.replaceChildren();
-    sync();
-    persist();
-    required.focus();
+    [meds, departure, layovers, destinations].forEach((p) => p.clear());
+    layoverDetails.open = false;
+    show(1, "push");
+    meds.focus();
   }
 
   function onSubmit(e) {
     e.preventDefault();
-    if (submit.getAttribute("aria-disabled") === "true") {
-      submitHint.hidden = false;
-      return;
+    if (step === 1) {
+      if (!canStep2()) { msg1.textContent = t.needIngredient; return; }
+      show(2, "push");
+    } else {
+      if (!canSubmit()) { msg2.textContent = t.needRoute; return; }
+      show(3, "push");
+      // Counts only: ingredient and country names are never sent to analytics.
+      track("check_submitted", {
+        required_count: requiredItems().length, optional_count: optionalItems().length,
+        layover_count: layovers.getItems().length, destination_count: destinations.getItems().length,
+      });
     }
-    render();
-    const title = document.getElementById("results-title");
-    title?.focus();
   }
 
   // ---------- results ----------
   function render() {
     const ingredients = [
-      ...required.getItems().map((i) => ({ ...i, id: ingredientId(i), required: true })),
-      ...optional.getItems().map((i) => ({ ...i, id: ingredientId(i), required: false })),
+      ...requiredItems().map((i) => ({ ...i, id: ingredientId(i), required: true })),
+      ...optionalItems().map((i) => ({ ...i, id: ingredientId(i), required: false })),
     ];
     const route = {
       departure: departure.getItems()[0].key,
@@ -261,8 +337,23 @@ async function init() {
     const warnings = routeWarnings(map, substances);
     const evalCodes = map.countries.filter((c) => !(c.roles.length === 1 && c.roles[0] === "departure")).map((c) => c.alpha3);
     const concl = buildConclusions(map, ingredients, evalCodes);
-
     const list = (codes) => (codes.length ? codes.map(countryName).join(", ") : t.none);
+
+    // verdict: the one-line answer, worst case first
+    const worstIn = (code) => worstOf(ingredients.map((i) => map.cells[code][i.id].status));
+    const worst = evalCodes.map(worstIn);
+    const count = (...kinds) => worst.filter((w) => kinds.includes(w)).length;
+    const bad = count("banned", "restricted");
+    let kind = "allowed";
+    let n = evalCodes.length;
+    if (bad) { kind = worst.includes("banned") ? "banned" : "restricted"; n = bad; }
+    else if (count("prescription")) { kind = "prescription"; n = count("prescription"); }
+    else if (count("unknown")) { kind = "unknown"; n = count("unknown"); }
+    const verdictEl = h("div", { class: `verdict status-${kind}` },
+      h("p", { class: "verdict-title" },
+        h("span", { class: "icon", "aria-hidden": "true" }, ICONS[kind]), " ",
+        fmt(t[VERDICT_KEY[kind === "restricted" ? "banned" : kind]], { n, total: evalCodes.length })),
+      h("p", { class: "verdict-note" }, t.verdictNote));
 
     const warningsEl = warnings.length
       ? h("section", { class: "warnings", "aria-labelledby": "warn-title" },
@@ -275,8 +366,8 @@ async function init() {
         })))))
       : null;
 
-    const conclEl = h("section", { "aria-labelledby": "concl-title" },
-      h("h3", { id: "concl-title" }, t.conclusions),
+    const conclEl = h("details", { class: "more" },
+      h("summary", {}, t.moreConclusions),
       h("dl", { class: "conclusions" }, Object.keys(t.conclusionTitles).flatMap((k) => [
         h("dt", {}, t.conclusionTitles[k]),
         h("dd", {}, list(concl[k])),
@@ -310,26 +401,32 @@ async function init() {
         } catch { copyStatus.textContent = t.copyFailed; }
       },
     }, t.copyLink);
-    const shareEl = h("div", { class: "share" }, copyBtn, " ", copyStatus, h("p", { class: "hint" }, t.shareNote));
+    const toolbar = h("div", { class: "toolbar" },
+      h("div", { class: "actions" },
+        h("button", { type: "button", class: "btn", onclick: () => show(1, "push") }, t.editMedicines),
+        h("button", { type: "button", class: "btn", onclick: () => show(2, "push") }, t.editRoute),
+        copyBtn,
+        h("button", { type: "button", class: "btn", onclick: reset }, t.reset)),
+      copyStatus,
+      h("p", { class: "hint" }, t.shareNote));
 
     results.replaceChildren(
       h("h2", { id: "results-title", tabindex: "-1" }, t.results),
       h("p", { class: "route-line" }, `${t.resultsRoute}: ${map.countries.map((c) => countryName(c.alpha3)).join(t.routeSeparator)}`),
-      shareEl, warningsEl, conclEl, tableEl, recoEl);
+      ...[verdictEl, toolbar, warningsEl, tableEl, recoEl, conclEl].filter(Boolean));
     results.hidden = false;
-    persist();
-    // Counts only: ingredient and country names are never sent to analytics.
-    track("check_submitted", {
-      required_count: required.getItems().length, optional_count: optional.getItems().length,
-      layover_count: layovers.getItems().length, destination_count: destinations.getItems().length,
-    });
   }
 
   function countryCard(c, map, ingredients, routeText) {
     const name = countryName(c.alpha3);
     const roleText = c.roles.map((r) => t.roles[r]).join(" + ");
-    return h("section", { class: "country", "aria-labelledby": `c-${c.alpha3}` },
-      h("h4", { id: `c-${c.alpha3}` }, name, " ", h("span", { class: "role" }, roleText)),
+    const worst = worstOf(ingredients.map((i) => map.cells[c.alpha3][i.id].status));
+    const departureOnly = c.roles.length === 1 && c.roles[0] === "departure";
+    return h("details", { class: "country", open: worst !== "allowed" && !departureOnly },
+      h("summary", {},
+        h("span", { class: "c-name" }, name), " ", h("span", { class: "role" }, roleText), " ",
+        h("span", { class: `status status-${worst}` },
+          h("span", { class: "icon", "aria-hidden": "true" }, ICONS[worst]), " ", t.status[worst])),
       h("table", { class: "results" },
         h("caption", { class: "sr-only" }, `${t.table}: ${name}`),
         h("thead", {}, h("tr", {},
@@ -381,9 +478,10 @@ async function init() {
         h("li", {}, h("a", { href: urls[k], target: "_blank", rel: "noopener noreferrer", "data-link-type": type }, t.kinds[k])))));
   }
 
-  sync();
-  window.addEventListener("hashchange", restoreFromHash);
-  if (location.hash.length > 1) restoreFromHash();
+  window.addEventListener("hashchange", () => restoreFromHash(true));
+  window.addEventListener("beforeprint", () => results.querySelectorAll("details").forEach((d) => { d.open = true; }));
+  if (location.hash.length > 1) restoreFromHash(false);
+  else show(1, "none", false);
 }
 
 init();

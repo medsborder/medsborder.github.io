@@ -82,11 +82,40 @@ legend { font-weight: 700; padding: 0 .4rem; }
 .btn.disabled { opacity: .55; cursor: not-allowed; }
 
 .route-line { font-weight: 600; }
+.verdict { border: 2px solid currentColor; border-radius: 10px; padding: .75rem 1rem; margin: 1rem 0; }
+.verdict-title { margin: 0; font-size: 1.3rem; font-weight: 800; }
+.verdict-note { margin: .3rem 0 0; font-size: .9rem; }
+.toolbar { margin: 1rem 0; }
+.toolbar .actions { flex-wrap: wrap; }
+details.more { border: 1px solid var(--border); border-radius: 8px; padding: .5rem .9rem; margin: 1rem 0; }
+
+/* wizard */
+.steps { list-style: none; margin: 1rem 0 0; padding: 0; display: flex; gap: .5rem; }
+.steps li { flex: 1 1 0; }
+.step-btn { font: inherit; width: 100%; display: flex; align-items: center; justify-content: center; gap: .5rem; padding: .6rem .4rem; border: 0; border-bottom: 4px solid var(--border); background: none; color: var(--muted); cursor: pointer; }
+.step-btn:disabled { cursor: not-allowed; opacity: .6; }
+.steps .current .step-btn { color: var(--fg); font-weight: 700; border-bottom-color: var(--accent); }
+.steps .done .step-btn { border-bottom-color: var(--allowed-fg); color: var(--fg); }
+.step-num { display: inline-flex; align-items: center; justify-content: center; width: 1.7rem; height: 1.7rem; border-radius: 50%; border: 2px solid currentColor; font-size: .9rem; font-weight: 700; flex: none; }
+.steps .current .step-num { background: var(--accent); border-color: var(--accent); color: var(--accent-fg); }
+.step-panel { margin: 1.25rem 0; }
+.step-panel h2 { margin: 0 0 .5rem; }
+.step-panel .actions { margin-top: 1.25rem; }
+.chip-mode { font: inherit; font-size: .8rem; font-weight: 600; cursor: pointer; border-radius: 999px; padding: .1rem .55rem; border: 1px solid var(--accent); background: var(--accent); color: var(--accent-fg); }
+.chip-mode.is-optional { background: transparent; color: var(--fg); border-style: dashed; border-color: var(--muted); }
+details.layovers { margin-top: 1rem; }
+.route-preview { margin-top: 1.25rem; }
+.route-strip { list-style: none; margin: .25rem 0 0; padding: 0; display: flex; flex-wrap: wrap; align-items: center; gap: .4rem; }
+.route-strip .stop + .stop::before { content: "→" / ""; margin-right: .4rem; color: var(--muted); }
+.route-strip .stop-name { font-weight: 700; }
 .warnings { background: var(--warn-bg); border: 2px solid var(--warn-border); border-radius: 8px; padding: .5rem 1rem; margin: 1rem 0; }
 .conclusions dt { font-weight: 600; margin-top: .75rem; }
 .conclusions dd { margin: .1rem 0 0; }
 
-.country { margin: 1.5rem 0; }
+.country { margin: .75rem 0; border: 1px solid var(--border); border-radius: 8px; padding: .25rem .9rem .5rem; }
+.country[open] { background: var(--surface); }
+.country > summary { display: flex; flex-wrap: wrap; gap: .4rem .6rem; align-items: center; padding: .5rem 0; }
+.c-name { font-size: 1.05rem; font-weight: 700; }
 .role { font-size: .8rem; font-weight: 600; background: var(--surface); border: 1px solid var(--border); border-radius: 4px; padding: .05rem .4rem; vertical-align: middle; }
 table.results { width: 100%; border-collapse: collapse; }
 table.results th, table.results td { text-align: left; vertical-align: top; padding: .6rem; border-top: 1px solid var(--border); }
@@ -117,9 +146,10 @@ details summary { cursor: pointer; font-weight: 600; }
   table.results th, table.results td { border-top: 0; padding: .4rem .6rem; }
   table.results td[data-label]::before { content: attr(data-label); display: block; font-size: .8rem; color: var(--muted); }
   .actions { flex-direction: column; }
+  .steps .step-btn { flex-direction: column; gap: .2rem; font-size: .85rem; }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; scroll-behavior: auto !important; } }
-@media print { .site-header nav, .actions, #check-form { display: none; } }
+@media print { .site-header nav, .actions, #check-form, .steps { display: none; } }
 
 .linklike { font: inherit; color: var(--accent); background: none; border: 0; padding: 0; text-decoration: underline; cursor: pointer; }
 body { padding-bottom: calc(1rem + var(--consent-h, 0px)); }
@@ -135,10 +165,9 @@ body { padding-bottom: calc(1rem + var(--consent-h, 0px)); }
 .faq details[open] { background: var(--surface); }
 .faq p { margin: .5rem 0; }
 
-/* Reserve the height of the form (rendered by JS) so the content below does not jump (CLS).
-   Measured: ~54rem on desktop, ~66rem on phones (longest hints, Ukrainian). */
-#app { min-height: 56rem; }
-@media (max-width: 600px) { #app { min-height: 66rem; } }
+/* Reserve the height of the wizard (rendered by JS) so the content below does not jump (CLS). */
+#app { min-height: 34rem; }
+@media (max-width: 600px) { #app { min-height: 40rem; } }
 
 /* The theme switcher is added by JS; reserve its size so the header does not change height. */
 #theme-slot { display: inline-flex; align-items: center; gap: .4rem; min-width: 11rem; min-height: 2.4rem; }

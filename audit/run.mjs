@@ -73,6 +73,11 @@ for (const p of ["/en/", "/uk/"]) {
   scenarios.push({ name: `${p} results dark mobile`, url: p + RESULTS, storage: { consent: DENIED, theme: "dark" }, scheme: "dark", viewport: MOBILE, results: true });
 }
 
+for (const p of ["/en/", "/uk/"]) {
+  scenarios.push({ name: `${p} step 2 light desktop`, url: p + "#r=codeine&o=melatonin&from=UKR&via=POL&step=2", storage: { consent: DENIED }, scheme: "light", viewport: DESKTOP });
+  scenarios.push({ name: `${p} step 1 dark mobile`, url: p + "#r=codeine&step=1", storage: { consent: DENIED, theme: "dark" }, scheme: "dark", viewport: MOBILE });
+}
+
 const AXE_TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa", "best-practice"];
 const problems = [];
 const fail = (msg) => problems.push(msg);

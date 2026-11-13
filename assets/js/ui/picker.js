@@ -5,7 +5,8 @@ let uid = 0;
 /**
  * Accessible ARIA 1.2 combobox with chips.
  * opts: { label, hint, search(query) -> [{key,label}], allowCustom, customLabel(q),
- *         single, canAdd(item) -> null | error string, onChange(items), t }
+ *         single, canAdd(item) -> null | error string, onChange(items), t,
+ *         chipMode?: { required, optional, label(item, mode) } }
  * items: { key, label, custom?: boolean, text?: string }
  */
 export function createPicker(opts) {
@@ -36,11 +37,27 @@ export function createPicker(opts) {
     msg.classList.toggle("error", isError);
   };
 
+  // Optional per-chip toggle (e.g. "must have" / "nice to have"). Keeps focus after re-render.
+  function modeButton(it) {
+    const mode = it.optional ? opts.chipMode.optional : opts.chipMode.required;
+    return h("button", {
+      type: "button", class: `chip-mode${it.optional ? " is-optional" : ""}`, "data-key": it.key,
+      "aria-label": opts.chipMode.label(it, mode),
+      onclick: () => {
+        it.optional = !it.optional;
+        renderChips();
+        changed();
+        [...chips.querySelectorAll(".chip-mode")].find((b) => b.dataset.key === it.key)?.focus();
+      },
+    }, mode);
+  }
+
   function renderChips() {
     chips.replaceChildren(...items.map((it) =>
       h("li", { class: "chip" },
         h("span", {}, it.label),
         it.custom ? h("span", { class: "chip-tag" }, opts.t.custom) : null,
+        opts.chipMode ? modeButton(it) : null,
         h("button", {
           type: "button", class: "chip-remove",
           "aria-label": opts.t.remove.replace("{name}", it.label),
