@@ -111,24 +111,46 @@
 </head>
 <body>
   <header class="site-header">
-    <a class="brand" href="../" aria-label="MedsBorder, головна">MedsBorder</a>
+    <a class="brand" href="../" aria-label="MedsBorder, головна"><img class="brand-mark" src="../assets/icons/icon.svg" alt="" width="28" height="28"><span>MedsBorder</span></a>
     <nav aria-label="Site">
       <a href="../en/" hreflang="en" lang="en">English</a>
       <span id="theme-slot"></span>
     </nav>
   </header>
   <main class="static">
-    <h1>Перевірка ліків для подорожі</h1>
-    <p>Введіть діючі речовини, які ви приймаєте, та країни на маршруті: відправлення, пересадки й призначення. Ви отримаєте статус за кожною країною, висновки та посилання, щоб перевірити правила самостійно. Усе працює у вашому браузері; те, що ви вводите, нам не надсилається.</p>
+    <section class="hero" aria-labelledby="hero-title">
+      <h1 id="hero-title">Перевірка ліків для подорожі</h1>
+      <p class="lead">Чи можна провезти ліки через кордон? Додайте ліки й маршрут і отримайте зрозумілу відповідь для кожної країни з офіційними джерелами.</p>
+      <ul class="trust">
+      <li><svg class="svg-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg><span>Офіційні переліки, кожен із датою «перевірено»</span></li>
+      <li><svg class="svg-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg><span>Працює у вашому браузері; те, що ви вводите, нам не надсилається</span></li>
+      <li><svg class="svg-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg><span>Українська й англійська, з урахуванням пересадок</span></li>
+      </ul>
+    </section>
     <p class="disclaimer" role="note"><strong>Перевірте результат додатково.</strong> Це не юридична й не медична порада. Правила змінюються, а дані можуть бути неповними або застарілими. «Немає даних» ніколи не означає «дозволено».</p>
     <noscript><p class="notice">Для перевірки потрібен JavaScript. Без нього ви можете скористатися посиланнями на офіційні джерела нижче.</p></noscript>
     <div id="app"></div>
-    <h2>Як це працює</h2>
-    <ol>
-      <li>Крок 1: додайте діючі речовини, які ви приймаєте. Введіть назву або додайте свою.</li>
-      <li>Крок 2: оберіть країну відправлення, пересадки й країни призначення (загалом до десяти країн).</li>
-      <li>Крок 3: натисніть «Перевірити». Спочатку ви побачите короткий вердикт, далі що робити (не везіть, підготуйте, перевірте самі), ваші речовини уздовж маршруту, деталі за країнами з джерелами та інші країни з лояльнішими правилами.</li>
-    </ol>
+    <section class="how" aria-labelledby="how-title">
+      <h2 id="how-title">Як це працює</h2>
+      <ol class="how-steps">
+      <li><span class="how-icon"><svg class="svg-icon" viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="9" width="18" height="6" rx="3" transform="rotate(-45 12 12)"/><path d="M9.5 9.5l5 5"/></svg></span><div><strong>Додайте ліки</strong><p>Введіть діючу речовину або натисніть на часту. Можна додати свою.</p></div></li>
+      <li><span class="how-icon"><svg class="svg-icon" viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 20h18M5 15l3-8 4 3 5-5 2 2-5 8z"/></svg></span><div><strong>Додайте маршрут</strong><p>Відправлення, пересадки й загалом до десяти країн. Країни з даними позначені.</p></div></li>
+      <li><span class="how-icon"><svg class="svg-icon" viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/></svg></span><div><strong>Прочитайте відповідь</strong><p>Короткий вердикт, що робити (не везіть, підготуйте, перевірте самі), ваші ліки уздовж маршруту та джерела.</p></div></li>
+      </ol>
+    </section>
+    <section class="coverage" aria-labelledby="coverage-title">
+      <h2 id="coverage-title">Що ми покриваємо</h2>
+      <p>Ми відповідаємо лише там, де є офіційне джерело. Для інших країн ви побачите чітке «немає даних» і посилання, щоб перевірити правила самостійно. «Немає даних» ніколи не означає «дозволено».</p>
+      <ul id="coverage-list" class="coverage-list"><li class="muted">Перелік покритих країн показується, коли ввімкнено JavaScript.</li></ul>
+    </section>
+    <section class="examples" aria-labelledby="examples-title">
+      <h2 id="examples-title">Спробуйте приклад</h2>
+      <ul class="examples-list">
+      <li><a href="#r=codeine&amp;from=UKR&amp;via=POL&amp;to=DEU">Кодеїн: Україна → Польща → Німеччина</a></li>
+      <li><a href="#r=zolpidem,melatonin&amp;from=DEU&amp;to=FRA">Золпідем і мелатонін: Німеччина → Франція</a></li>
+      <li><a href="#r=methylphenidate&amp;from=POL&amp;to=DEU,FRA">Метилфенідат: Польща → Німеччина й Франція</a></li>
+      </ul>
+    </section>
     <section class="faq" aria-labelledby="faq-title">
       <h2 id="faq-title">Поширені запитання</h2>
       <details><summary>Чи можна взяти ліки в іншу країну?</summary><p>Це залежить від країни та від діючої речовини. Ліки з контрольованими речовинами, як-от деякі знеболювальні, снодійні та препарати від СДУГ, часто потребують рецепта, довідки лікаря або дозволу, а деякі країни забороняють речовини, звичні в інших місцях. Перевірте кожну країну на маршруті та візьміть оригінальне пакування й рецепт.</p></details>

@@ -5,7 +5,7 @@ let uid = 0;
 /**
  * Accessible ARIA 1.2 combobox with chips.
  * opts: { label, hint, search(query) -> [{key,label}], allowCustom, customLabel(q),
- *         single, canAdd(item) -> null | error string, onChange(items), t }
+ *         single, canAdd(item) -> null | error string, onChange(items), iconFor?(item) -> Node, t }
  * items: { key, label, custom?: boolean, text?: string }
  */
 export function createPicker(opts) {
@@ -39,6 +39,7 @@ export function createPicker(opts) {
   function renderChips() {
     chips.replaceChildren(...items.map((it) =>
       h("li", { class: "chip" },
+        opts.iconFor?.(it) ?? null,
         h("span", {}, it.label),
         it.custom ? h("span", { class: "chip-tag" }, opts.t.custom) : null,
         h("button", {
@@ -79,7 +80,7 @@ export function createPicker(opts) {
         class: r.custom ? "option custom" : "option",
         onmousedown: (e) => e.preventDefault(),
         onclick: () => pick(r),
-      }, r.label, r.badge ? [" ", h("span", { class: "badge" }, r.badge)] : null)));
+      }, opts.iconFor?.(r) ?? null, r.label, r.badge ? [" ", h("span", { class: "badge" }, r.badge)] : null)));
     const open = results.length > 0;
     list.hidden = !open;
     input.setAttribute("aria-expanded", String(open));
@@ -89,18 +90,25 @@ export function createPicker(opts) {
     else say("");
   }
 
+  /** Adds an item as if it was picked from the list. Returns an error text or null. */
+  function add(item) {
+    const err = opts.canAdd?.(item);
+    if (err) { say(err, true); return err; }
+    items = opts.single ? [item] : [...items, item];
+    renderChips();
+    say(opts.t.added.replace("{name}", item.label));
+    changed();
+    return null;
+  }
+
   function pick(r) {
     const item = r.custom
       ? { key: `custom:${r.text.toLowerCase()}`, label: r.text, custom: true, text: r.text }
       : { key: r.key, label: r.label };
-    const err = opts.canAdd?.(item);
-    if (err) { say(err, true); return; }
-    items = opts.single ? [item] : [...items, item];
-    input.value = "";
-    close();
-    renderChips();
-    say(opts.t.added.replace("{name}", item.label));
-    changed();
+    if (add(item) === null) {
+      input.value = "";
+      close();
+    }
   }
 
   input.addEventListener("input", refresh);
@@ -126,6 +134,7 @@ export function createPicker(opts) {
   return {
     el,
     getItems: () => items,
+    add,
     setItems(next) { items = next; renderChips(); },
     clear() { items = []; input.value = ""; close(); renderChips(); say(""); },
     setDisabled(disabled, reason = "") {

@@ -1,4 +1,6 @@
 import { h, fmt } from "./dom.js";
+import { icon, flag } from "./icons.js";
+import { FLAGS } from "../core/flags.js";
 import { STRINGS } from "./i18n.js";
 import { createPicker } from "./picker.js";
 import { buildMap, routeWarnings, MAX_ROUTE_COUNTRIES } from "../core/buildMap.js";
@@ -12,13 +14,14 @@ import { buildLinks, KINDS } from "../core/links.js";
 import { buildPrompt, PROMPT_LANGS } from "../core/prompt.js";
 import { assistantLinks } from "../core/assistants.js";
 import { buildHelpLinks } from "../core/help.js";
+import { buildSummary } from "../core/summary.js";
+import { reportUrl } from "../core/report.js";
 import { normalize, search, countryIndex, substanceIndex, displayName } from "../core/search.js";
 
 const lang = document.documentElement.lang === "uk" ? "uk" : "en";
 const t = STRINGS[lang];
 const DATA = new URL("../../../data/", import.meta.url);
-const ICONS = { allowed: "✓", prescription: "℞", restricted: "!", banned: "✕", unknown: "?" };
-const ACTION_ICONS = { stop: "✕", prepare: "℞", verify: "?", ok: "✓" };
+const ACTION_ICONS = { stop: "banned", prepare: "prescription", verify: "unknown", ok: "allowed" };
 
 // ---------- theme ----------
 function initTheme(slot) {
@@ -115,24 +118,58 @@ async function init() {
   const meds = createPicker({
     ...common, label: t.ingredients, hint: t.ingredientsHint, allowCustom: true,
     customLabel: (q) => fmt(t.addCustom, { q }), canAdd: ingredientCanAdd, onChange: changed,
+    iconFor: (it) => (it.custom ? null : icon(substanceById.get(it.key)?.category ?? "globe", { size: 16 })),
     search: (q) => search(sIndex, q, {
       exclude: new Set(meds.getItems().filter((i) => !i.custom).map((i) => i.key)),
     }),
   });
+  const countryIcon = (it) => (FLAGS[it.key] ? flag(it.key) : null);
   const countrySearch = (q) => search(cIndex, q, { exclude: new Set(routeCodes()) })
     .map((c) => ({ ...c, badge: covered.has(c.key) ? t.hasData : null }));
   const departure = createPicker({
     ...common, label: t.departure, hint: t.departureHint, single: true, search: countrySearch,
-    canAdd: (i) => countryCanAdd(i, departure), onChange: changed,
+    canAdd: (i) => countryCanAdd(i, departure), onChange: changed, iconFor: countryIcon,
   });
   const layovers = createPicker({
     ...common, label: t.layovers, hint: t.layoversHint, search: countrySearch,
-    canAdd: (i) => countryCanAdd(i, layovers), onChange: changed,
+    canAdd: (i) => countryCanAdd(i, layovers), onChange: changed, iconFor: countryIcon,
   });
   const destinations = createPicker({
     ...common, label: t.destinations, hint: t.destinationsHint, search: countrySearch,
-    canAdd: (i) => countryCanAdd(i, destinations), onChange: changed,
+    canAdd: (i) => countryCanAdd(i, destinations), onChange: changed, iconFor: countryIcon,
   });
+
+  // ---------- quick picks: one tap instead of typing ----------
+  function quickRow(label, entries, picker, iconOf) {
+    const row = h("div", { class: "quick" });
+    const refresh = () => {
+      const chosen = new Set([...meds.getItems(), ...departure.getItems(), ...layovers.getItems(), ...destinations.getItems()].map((i) => i.key));
+      const shown = entries.filter((e) => !chosen.has(e.key));
+      row.hidden = shown.length === 0;
+      row.replaceChildren(h("span", { class: "quick-label" }, label), ...shown.map((e) => h("button", {
+        type: "button", class: "quick-chip",
+        onclick: () => { if (picker.add({ ...e }) === null) picker.focus(); },
+      }, iconOf(e), e.label)));
+    };
+    return { el: row, refresh };
+  }
+  const quickMeds = quickRow(t.commonMeds, substances.filter((s) => s.common)
+    .map((s) => ({ key: s.id, label: displayName(s, lang), category: s.category })), meds,
+  (e) => icon(e.category ?? "globe", { size: 16 }));
+  const coveredEntries = countries.filter((c) => covered.has(c.alpha3)).map((c) => ({ key: c.alpha3, label: countryName(c.alpha3) }));
+  const quickFrom = quickRow(t.countriesWithData, coveredEntries, departure, (e) => flag(e.key));
+  const quickTo = quickRow(t.countriesWithData, coveredEntries, destinations, (e) => flag(e.key));
+  const quickAll = [quickMeds, quickFrom, quickTo];
+
+  // ---------- coverage list (home page, below the form) ----------
+  const coverageEl = document.getElementById("coverage-list");
+  if (coverageEl) {
+    const newest = (code) => sources.filter((src) => src.countries.includes(code)).map((src) => src.verifiedAt).sort().at(-1);
+    const count = (code) => new Set(sources.filter((src) => src.countries.includes(code)).flatMap((src) => src.entries.map((e) => e.substance))).size;
+    coverageEl.replaceChildren(...[...covered].sort((a, b) => countryName(a).localeCompare(countryName(b), lang)).map((code) =>
+      h("li", {}, flag(code), h("strong", {}, countryName(code)), " ",
+        h("span", { class: "muted" }, `${fmt(t.coverageSubstances, { n: count(code) })} · ${fmt(t.verified, { date: newest(code) })}`))));
+  }
 
   // ---------- shareable state (URL fragment) ----------
   // The fragment holds the form state and, while the user is still filling it in, the step.
@@ -222,10 +259,10 @@ async function init() {
   const title2 = h("h2", { id: "step-2-title", tabindex: "-1" }, t.routeTitle);
 
   const panel1 = h("section", { class: "step-panel", "aria-labelledby": "step-1-title" },
-    title1, meds.el, msg1,
+    title1, meds.el, quickMeds.el, msg1,
     h("div", { class: "actions" }, nextBtn));
   const panel2 = h("section", { class: "step-panel", "aria-labelledby": "step-2-title", hidden: true },
-    title2, departure.el, layoverDetails, destinations.el,
+    title2, departure.el, quickFrom.el, layoverDetails, destinations.el, quickTo.el,
     h("div", { class: "route-preview" }, h("p", { class: "link-title" }, t.routePreview), routeList, routeNote),
     msg2,
     h("div", { class: "actions" }, backBtn, checkBtn));
@@ -263,7 +300,7 @@ async function init() {
     routeNote.textContent = noData.length ? fmt(t.routeNoData, { names: noData.join(", ") }) : "";
     routeList.replaceChildren(...(stops.length
       ? stops.map(([i, role]) => h("li", { class: `stop stop-${role}` },
-        h("span", { class: "stop-name" }, i.label), " ", h("span", { class: "role" }, t.roles[role]),
+        flag(i.key), h("span", { class: "stop-name" }, i.label), " ", h("span", { class: "role" }, t.roles[role]),
         role !== "departure" && !covered.has(i.key) ? [" ", h("span", { class: "badge badge-muted" }, t.noDataTag)] : null))
       : [h("li", { class: "muted" }, t.routeEmpty)]));
   }
@@ -279,6 +316,7 @@ async function init() {
     }
     renderRoute();
     renderStepper();
+    quickAll.forEach((q) => q.refresh());
   }
 
   function changed() {
@@ -334,7 +372,6 @@ async function init() {
     const map = buildMap(route, ids, sources, new Date());
     const labelOf = new Map(ingredients.map((i) => [i.id, ingredientLabel(i)]));
     const statusText = (s) => t.status[s];
-    const icon = (status) => h("span", { class: "icon", "aria-hidden": "true" }, ICONS[status]);
 
     const warnings = routeWarnings(map, substances);
     // the departure-only country is context: export rules are not in our data
@@ -343,9 +380,9 @@ async function init() {
 
     // verdict: the one-line answer, worst case first
     const verdict = buildVerdict(map, ids, evalCodes);
+    const verdictText = fmt(t[VERDICT_KEY[verdict.kind === "restricted" ? "banned" : verdict.kind]], { n: verdict.n, total: verdict.total });
     const verdictEl = h("div", { class: `verdict status-${verdict.kind}` },
-      h("p", { class: "verdict-title" }, icon(verdict.kind), " ",
-        fmt(t[VERDICT_KEY[verdict.kind === "restricted" ? "banned" : verdict.kind]], { n: verdict.n, total: verdict.total })),
+      h("p", { class: "verdict-title" }, icon(verdict.kind), " ", verdictText),
       h("p", { class: "verdict-note" }, t.verdictNote));
 
     // what to do: grouped by action, most urgent first
@@ -360,7 +397,7 @@ async function init() {
       h("h3", { id: "todo-title" }, t.actionsTitle),
       ACTION_GROUPS.filter((g) => actions[g].length).map((g) =>
         h("div", { class: `action-group action-${g}` },
-          h("h4", {}, h("span", { class: "icon", "aria-hidden": "true" }, ACTION_ICONS[g]), " ", t.actionTitles[g]),
+          h("h4", {}, icon(ACTION_ICONS[g]), " ", t.actionTitles[g]),
           h("p", { class: "hint" }, t.actionHints[g]),
           h("ul", {}, actions[g].map((item) => h("li", {},
             h("strong", {}, labelOf.get(item.substance)), ": ",
@@ -375,7 +412,7 @@ async function init() {
         return h("div", { class: "timeline-row" },
           h("p", { class: "timeline-name" }, name),
           h("ol", { "aria-label": fmt(t.stopsLabel, { name, stops }) }, row.stops.map((x) =>
-            h("li", { class: `stop status-${x.status}`, "aria-hidden": "true" }, icon(x.status), " ", countryName(x.country)))));
+            h("li", { class: `stop status-${x.status}`, "aria-hidden": "true" }, icon(x.status), flag(x.country), countryName(x.country)))));
       }));
 
     const warningsEl = warnings.length
@@ -420,17 +457,39 @@ async function init() {
         } catch { copyStatus.textContent = t.copyFailed; }
       },
     }, t.copyLink);
+    const today = new Date().toISOString().slice(0, 10);
+    const summary = () => buildSummary({
+      title: t.summaryTitle, routeLabel: t.resultsRoute,
+      route: map.countries.map((c) => countryName(c.alpha3)), verdict: verdictText,
+      groups: ACTION_GROUPS.map((g) => ({
+        title: t.actionTitles[g],
+        lines: actions[g].map((item) => `${labelOf.get(item.substance)}: ${item.countries.map(countryWithRole).join("; ")}`),
+      })),
+      checkedOn: fmt(t.checkedOn, { date: today }), note: t.printNote, url: location.href,
+    });
+    const summaryBtn = h("button", {
+      type: "button", class: "btn",
+      onclick: async () => {
+        try {
+          await navigator.clipboard.writeText(summary());
+          copyStatus.textContent = t.summaryCopied;
+          track("summary_copied");
+        } catch { copyStatus.textContent = t.copyFailed; }
+      },
+    }, t.copySummary);
+    const printBtn = h("button", { type: "button", class: "btn", onclick: () => { track("sheet_printed"); window.print(); } }, t.printSheet);
     const toolbar = h("div", { class: "toolbar" },
       h("div", { class: "actions" },
         h("button", { type: "button", class: "btn", onclick: () => show(1, "push") }, t.editMedicines),
         h("button", { type: "button", class: "btn", onclick: () => show(2, "push") }, t.editRoute),
-        copyBtn,
+        copyBtn, summaryBtn, printBtn,
         h("button", { type: "button", class: "btn", onclick: reset }, t.reset)),
       copyStatus,
       h("p", { class: "hint" }, t.shareNote));
 
     results.replaceChildren(
       h("h2", { id: "results-title", tabindex: "-1" }, t.results),
+      h("p", { class: "print-only" }, `${t.summaryTitle} · ${fmt(t.checkedOn, { date: today })} · ${location.href}`),
       h("p", { class: "route-line" }, `${t.resultsRoute}: ${map.countries.map((c) => countryName(c.alpha3)).join(t.routeSeparator)}`),
       ...[verdictEl, toolbar, actionsEl, helpEl, timelineEl, warningsEl, tableEl, askEl, recoEl].filter(Boolean));
     results.hidden = false;
@@ -517,17 +576,27 @@ async function init() {
     const departureOnly = c.roles.length === 1 && c.roles[0] === "departure";
     return h("details", { class: "country", open: worst !== "allowed" && !departureOnly },
       h("summary", {},
-        h("span", { class: "c-name" }, name), " ", h("span", { class: "role" }, roleText), " ",
+        flag(c.alpha3), h("span", { class: "c-name" }, name), " ", h("span", { class: "role" }, roleText), " ",
         departureOnly
           ? h("span", { class: "muted" }, t.departureNote)
           : h("span", { class: `status status-${worst}` },
-            h("span", { class: "icon", "aria-hidden": "true" }, ICONS[worst]), " ", t.status[worst])),
+            icon(worst), " ", t.status[worst])),
       h("table", { class: "results" },
         h("caption", { class: "sr-only" }, `${t.table}: ${name}`),
         h("thead", {}, h("tr", {},
           h("th", { scope: "col" }, t.colIngredient), h("th", { scope: "col" }, t.colStatus),
           h("th", { scope: "col" }, t.colSources), h("th", { scope: "col" }, t.colCheck))),
-        h("tbody", {}, ingredients.map((ing) => ingredientRow(c, ing, map, name)))));
+        h("tbody", {}, ingredients.map((ing) => ingredientRow(c, ing, map, name)))),
+      h("p", { class: "report" }, h("a", {
+        href: reportUrl({
+          country: name,
+          rows: ingredients.map((ing) => {
+            const cell = map.cells[c.alpha3][ing.id];
+            return { ingredient: ingredientEnglish(ing), status: cell.status, sources: cell.sources.map((x) => x.url) };
+          }),
+        }),
+        target: "_blank", rel: "noopener noreferrer", "data-link-type": "report",
+      }, t.reportData)));
   }
 
   function ingredientRow(c, ing, map, countryLabel) {
@@ -538,9 +607,9 @@ async function init() {
         ing.label),
       h("td", { "data-label": t.colStatus },
         h("span", { class: `status status-${cell.status}` },
-          h("span", { class: "icon", "aria-hidden": "true" }, ICONS[cell.status]), " ", t.status[cell.status]),
-        cell.stale ? h("p", { class: "flag" }, t.stale) : null,
-        cell.transitFallback ? h("p", { class: "flag" }, t.transitFallback) : null),
+          icon(cell.status), " ", t.status[cell.status]),
+        cell.stale ? h("p", { class: "flag-note" }, t.stale) : null,
+        cell.transitFallback ? h("p", { class: "flag-note" }, t.transitFallback) : null),
       h("td", { "data-label": t.colSources }, sourcesCell(cell, ing)),
       h("td", { "data-label": t.colCheck },
         h("details", {},

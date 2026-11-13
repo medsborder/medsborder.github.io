@@ -111,24 +111,46 @@
 </head>
 <body>
   <header class="site-header">
-    <a class="brand" href="../" aria-label="MedsBorder home">MedsBorder</a>
+    <a class="brand" href="../" aria-label="MedsBorder home"><img class="brand-mark" src="../assets/icons/icon.svg" alt="" width="28" height="28"><span>MedsBorder</span></a>
     <nav aria-label="Site">
       <a href="../uk/" hreflang="uk" lang="uk">Українська</a>
       <span id="theme-slot"></span>
     </nav>
   </header>
   <main class="static">
-    <h1>Travel medication checker</h1>
-    <p>Enter the active ingredients you take and the countries on your route: departure, layovers and destinations. You get a status per country, conclusions and links to check the rules yourself. Everything runs in your browser; what you type is not sent to us.</p>
+    <section class="hero" aria-labelledby="hero-title">
+      <h1 id="hero-title">Travel medication checker</h1>
+      <p class="lead">Can I take my medicines across the border? Add your medicines and your route, and get a clear answer for every country, with official sources.</p>
+      <ul class="trust">
+      <li><svg class="svg-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg><span>Official lists, each with a “verified” date</span></li>
+      <li><svg class="svg-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg><span>Runs in your browser; what you type is not sent to us</span></li>
+      <li><svg class="svg-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg><span>English and Ukrainian, layovers included</span></li>
+      </ul>
+    </section>
     <p class="disclaimer" role="note"><strong>Check the result independently.</strong> This is not legal or medical advice. Rules change, and the data may be incomplete or out of date. “No data” never means “allowed”.</p>
     <noscript><p class="notice">The checker needs JavaScript. Without it you can still read the guidance and FAQ below and search the official sources of each country yourself.</p></noscript>
     <div id="app"></div>
-    <h2>How it works</h2>
-    <ol>
-      <li>Step 1: add the active ingredients you take. Type a name or add your own.</li>
-      <li>Step 2: choose the departure country, any layovers and your destinations (up to ten countries in total).</li>
-      <li>Step 3: press Check. You get a one-line verdict first, then a short list of what to do (do not bring, prepare, check yourself), your ingredients along the route, details by country with sources, and other countries with friendlier rules.</li>
-    </ol>
+    <section class="how" aria-labelledby="how-title">
+      <h2 id="how-title">How it works</h2>
+      <ol class="how-steps">
+      <li><span class="how-icon"><svg class="svg-icon" viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="9" width="18" height="6" rx="3" transform="rotate(-45 12 12)"/><path d="M9.5 9.5l5 5"/></svg></span><div><strong>Add your medicines</strong><p>Type an active ingredient or tap a common one. You can add your own.</p></div></li>
+      <li><span class="how-icon"><svg class="svg-icon" viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 20h18M5 15l3-8 4 3 5-5 2 2-5 8z"/></svg></span><div><strong>Add your route</strong><p>Departure, layovers and up to ten countries in total. Countries with data are marked.</p></div></li>
+      <li><span class="how-icon"><svg class="svg-icon" viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/></svg></span><div><strong>Read the answer</strong><p>A one-line verdict, what to do (do not bring, prepare, check yourself), your medicines along the route, and sources.</p></div></li>
+      </ol>
+    </section>
+    <section class="coverage" aria-labelledby="coverage-title">
+      <h2 id="coverage-title">What we cover</h2>
+      <p>We only answer where we have an official source. For other countries you get a clear “no data” and links to check the rules yourself. “No data” never means “allowed”.</p>
+      <ul id="coverage-list" class="coverage-list"><li class="muted">The list of covered countries is shown when JavaScript is on.</li></ul>
+    </section>
+    <section class="examples" aria-labelledby="examples-title">
+      <h2 id="examples-title">Try an example</h2>
+      <ul class="examples-list">
+      <li><a href="#r=codeine&amp;from=UKR&amp;via=POL&amp;to=DEU">Codeine: Ukraine → Poland → Germany</a></li>
+      <li><a href="#r=zolpidem,melatonin&amp;from=DEU&amp;to=FRA">Zolpidem and melatonin: Germany → France</a></li>
+      <li><a href="#r=methylphenidate&amp;from=POL&amp;to=DEU,FRA">Methylphenidate: Poland → Germany and France</a></li>
+      </ul>
+    </section>
     <section class="faq" aria-labelledby="faq-title">
       <h2 id="faq-title">FAQ</h2>
       <details><summary>Can I take my medicines to another country?</summary><p>It depends on the country and on the ingredient. Medicines that contain controlled substances, such as some painkillers, sleeping pills and ADHD medicines, often need a prescription, a doctor’s certificate or a permit, and some countries ban substances that are common elsewhere. Check every country on your route and carry the original packaging and prescription.</p></details>
