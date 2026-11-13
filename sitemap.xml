@@ -46,4 +46,18 @@
     <xhtml:link rel="alternate" hreflang="uk" href="https://medsborder.github.io/uk/terms/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://medsborder.github.io/en/terms/"/>
   </url>
+  <url>
+    <loc>https://medsborder.github.io/en/sources/</loc>
+    <lastmod>2026-11-13</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://medsborder.github.io/en/sources/"/>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://medsborder.github.io/uk/sources/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://medsborder.github.io/en/sources/"/>
+  </url>
+  <url>
+    <loc>https://medsborder.github.io/uk/sources/</loc>
+    <lastmod>2026-11-13</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://medsborder.github.io/en/sources/"/>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://medsborder.github.io/uk/sources/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://medsborder.github.io/en/sources/"/>
+  </url>
 </urlset>

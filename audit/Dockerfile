@@ -8,6 +8,6 @@ ENV HOME=/tmp
 WORKDIR /audit
 COPY package.json package-lock.json ./
 RUN npm ci --no-audit --no-fund
-COPY run.mjs thresholds.json ./
+COPY run.mjs e2e.mjs thresholds.json ./
 # The site is mounted read-only at /site; reports go to /audit/out.
 CMD ["node", "run.mjs"]

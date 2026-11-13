@@ -32,7 +32,9 @@ See `LICENSE`.
 
 `just build` (alias of `just stage`, Docker) writes the production site to `_site/`: all JS is bundled and minified with esbuild into `assets/app.<hash>.js` (checker pages) and `assets/consent.<hash>.js` (other pages), all data is merged into one `assets/data.<hash>.json`, and the HTML is rewritten to point at them. The sources in `assets/js/` and `data/` stay as they are, so `just serve` works without a build and the tests import the modules directly.
 
-`just test` runs the unit and static tests (Node, in Docker). `just audit` stages the publishable files into `_site/` and audits them in a real Chromium (Docker, reports in `audit/out/`):
+`just sources-page` (Docker) regenerates `en/sources/` and `uk/sources/` ("Coverage and sources": every country and source with its date, what the statuses mean, and a table of substances by country) from `data/`. Run it after changing anything in `data/`; `just test` fails when the committed pages are stale.
+
+`just test` runs the unit and static tests (Node, in Docker). `just audit` stages the publishable files into `_site/` and audits them in a real Chromium (axe, Lighthouse and an end-to-end walk through the wizard in `audit/e2e.mjs`, in English and Ukrainian) (Docker, reports in `audit/out/`):
 
 - **axe-core**: WCAG 2.0/2.1/2.2 A and AA plus best practices, on 20 states (language, banner shown or dismissed, results, light and dark, desktop and mobile). Zero violations allowed. Also fails on JavaScript errors, failed requests and Content-Security-Policy violations.
 - **Lighthouse (mobile)**: thresholds in `audit/thresholds.json` (performance and best practices/SEO at least 0.9/0.95, accessibility 1).

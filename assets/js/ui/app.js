@@ -468,7 +468,7 @@ async function init() {
       checkedOn: fmt(t.checkedOn, { date: today }), note: t.printNote, url: location.href,
     });
     const summaryBtn = h("button", {
-      type: "button", class: "btn",
+      type: "button", class: "btn", "data-action": "copy-summary",
       onclick: async () => {
         try {
           await navigator.clipboard.writeText(summary());
@@ -480,10 +480,10 @@ async function init() {
     const printBtn = h("button", { type: "button", class: "btn", onclick: () => { track("sheet_printed"); window.print(); } }, t.printSheet);
     const toolbar = h("div", { class: "toolbar" },
       h("div", { class: "actions" },
-        h("button", { type: "button", class: "btn", onclick: () => show(1, "push") }, t.editMedicines),
-        h("button", { type: "button", class: "btn", onclick: () => show(2, "push") }, t.editRoute),
+        h("button", { type: "button", class: "btn", "data-action": "edit-meds", onclick: () => show(1, "push") }, t.editMedicines),
+        h("button", { type: "button", class: "btn", "data-action": "edit-route", onclick: () => show(2, "push") }, t.editRoute),
         copyBtn, summaryBtn, printBtn,
-        h("button", { type: "button", class: "btn", onclick: reset }, t.reset)),
+        h("button", { type: "button", class: "btn", "data-action": "reset", onclick: reset }, t.reset)),
       copyStatus,
       h("p", { class: "hint" }, t.shareNote));
 

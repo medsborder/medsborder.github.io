@@ -8,6 +8,7 @@ import axe from "axe-core";
 import puppeteer from "puppeteer-core";
 import * as chromeLauncher from "chrome-launcher";
 import lighthouse from "lighthouse";
+import { runE2E } from "./e2e.mjs";
 
 const SITE_DIR = process.env.SITE_DIR ?? "/site";
 const OUT_DIR = process.env.OUT_DIR ?? "/audit/out";
@@ -59,7 +60,7 @@ const BASE = `http://localhost:${server.address().port}`;
 // ---------- scenarios ----------
 const DENIED = JSON.stringify({ v: 1, analytics: false, at: new Date().toISOString() });
 const RESULTS = "#r=codeine,poppy-seeds,~my%20herbal%20tea&o=melatonin&from=UKR&via=POL&to=DEU,FRA";
-const PAGES = ["/", "/en/", "/uk/", "/en/privacy/", "/uk/privacy/", "/en/terms/", "/uk/terms/", "/404.html"];
+const PAGES = ["/", "/en/", "/uk/", "/en/privacy/", "/uk/privacy/", "/en/terms/", "/uk/terms/", "/en/sources/", "/uk/sources/", "/404.html"];
 const DESKTOP = { width: 1280, height: 900, deviceScaleFactor: 1 };
 const MOBILE = { width: 375, height: 800, deviceScaleFactor: 2, isMobile: true, hasTouch: true };
 
@@ -97,7 +98,7 @@ async function runAxe(browser) {
     }, s.storage);
     await page.goto(BASE + s.url, { waitUntil: "networkidle0" });
     if (s.url.includes("/en/") || s.url.includes("/uk/")) {
-      if (!/privacy|terms/.test(s.url)) await page.waitForSelector("#check-form");
+      if (!/privacy|terms|sources/.test(s.url)) await page.waitForSelector("#check-form");
       if (s.results) await page.waitForSelector("#results:not([hidden]) table");
     }
     await page.evaluate(() => document.querySelectorAll("details").forEach((d) => { d.open = true; }));
@@ -120,7 +121,7 @@ async function runAxe(browser) {
 
 async function runLighthouse() {
   console.log("\n== Lighthouse (mobile) ==");
-  const names = ["/", "/en/", "/uk/", "/en/privacy/", "/uk/privacy/", "/en/terms/", "/uk/terms/"];
+  const names = ["/", "/en/", "/uk/", "/en/privacy/", "/uk/privacy/", "/en/terms/", "/uk/terms/", "/en/sources/", "/uk/sources/"];
   for (const url of names) {
     const chrome = await chromeLauncher.launch({ chromePath: CHROME, chromeFlags: CHROME_FLAGS });
     try {
@@ -154,6 +155,7 @@ async function runLighthouse() {
 const browser = await puppeteer.launch({ executablePath: CHROME, args: CHROME_FLAGS });
 try {
   await runAxe(browser);
+  await runE2E({ browser, base: BASE, fail });
 } finally {
   await browser.close();
 }

@@ -9,6 +9,7 @@ What is done and what is still missing on MedsBorder. Everything here is a plan,
 - Three-step wizard (medicines, route, results) with a verdict, a "what to do" list (do not bring / prepare / check yourself), a timeline along the route and an alternative route; every ingredient is treated equally.
 - One prompt for the whole trip (EN/UK, optional "what we found") with copy and links to ChatGPT, Claude, Perplexity and Gemini; Google searches for paperwork (doctor, online consultation, translation) and for each country's embassy and customs.
 - Home page with a hero, trust points, quick picks for common medicines and countries with data, icons and flags (flags only for countries that have data; a test keeps them in step), coverage list, examples, "Report incorrect data" (prefilled GitHub issue), copy summary and print/PDF sheet.
+- "Coverage and sources" pages (EN/UK) generated from the data and checked against it by a test; an end-to-end walk through the wizard runs in the audit and blocks the deploy.
 - Bilingual (EN/UK) static site, light/dark/system theme, accessible form (ARIA combobox), results table (cards on mobile), conclusions, recommendations, route-conflict warnings, shareable links.
 - Consent banner and Google Tag Manager loaded only after consent; privacy and cookie policy; terms of use and disclaimer.
 - SEO (metadata, JSON-LD, sitemap, icons, social cards), CSP, axe and Lighthouse gates, link checks, unit tests.

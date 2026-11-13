@@ -11,6 +11,8 @@ export const PAGES = [
   { path: "/uk/privacy/", alt: { en: "/en/privacy/", uk: "/uk/privacy/" }, xdefault: "/en/privacy/" },
   { path: "/en/terms/", alt: { en: "/en/terms/", uk: "/uk/terms/" }, xdefault: "/en/terms/" },
   { path: "/uk/terms/", alt: { en: "/en/terms/", uk: "/uk/terms/" }, xdefault: "/en/terms/" },
+  { path: "/en/sources/", alt: { en: "/en/sources/", uk: "/uk/sources/" }, xdefault: "/en/sources/" },
+  { path: "/uk/sources/", alt: { en: "/en/sources/", uk: "/uk/sources/" }, xdefault: "/en/sources/" },
 ];
 
 export function buildSitemap(lastmod) {

@@ -229,6 +229,18 @@ body { padding-bottom: calc(1rem + var(--consent-h, 0px)); }
 .report { margin: .5rem 0 0; font-size: .9rem; }
 .print-only { display: none; }
 
+/* ---- sources page ---- */
+.status-legend { display: grid; grid-template-columns: max-content 1fr; gap: .6rem 1rem; align-items: baseline; }
+.status-legend dd { margin: 0; }
+.country-sources h3 { margin: 1.25rem 0 .25rem; }
+.country-sources ul { padding-left: 1.2rem; }
+.table-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: 10px; margin: .75rem 0; }
+.coverage-table { border-collapse: collapse; width: 100%; min-width: 34rem; }
+.coverage-table th, .coverage-table td { text-align: left; padding: .5rem .7rem; border-top: 1px solid var(--border); vertical-align: middle; }
+.coverage-table thead th { border-top: 0; border-bottom: 2px solid var(--border); background: var(--surface); }
+.coverage-table tbody th { font-weight: 600; }
+@media (max-width: 600px) { .status-legend { grid-template-columns: 1fr; } }
+
 @media print {
   body { background: #fff; color: #000; }
   .site-header, .hero, .how, .coverage, .examples, .faq, .site-footer, #check-form, .steps, .toolbar, .ask, .help, .report, .quick { display: none !important; }
