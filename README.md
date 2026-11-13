@@ -30,6 +30,8 @@ See `LICENSE`.
 
 ## Quality gates
 
+`just build` (alias of `just stage`, Docker) writes the production site to `_site/`: all JS is bundled and minified with esbuild into `assets/app.<hash>.js` (checker pages) and `assets/consent.<hash>.js` (other pages), all data is merged into one `assets/data.<hash>.json`, and the HTML is rewritten to point at them. The sources in `assets/js/` and `data/` stay as they are, so `just serve` works without a build and the tests import the modules directly.
+
 `just test` runs the unit and static tests (Node, in Docker). `just audit` stages the publishable files into `_site/` and audits them in a real Chromium (Docker, reports in `audit/out/`):
 
 - **axe-core**: WCAG 2.0/2.1/2.2 A and AA plus best practices, on 20 states (language, banner shown or dismissed, results, light and dark, desktop and mobile). Zero violations allowed. Also fails on JavaScript errors, failed requests and Content-Security-Policy violations.

@@ -41,6 +41,8 @@ async function loadJson(url) {
 }
 
 async function loadData() {
+  // The production build merges all data into one file (see build/build.mjs).
+  if (typeof __DATA_BUNDLE__ !== "undefined") return loadJson(new URL(__DATA_BUNDLE__, import.meta.url));
   const [countries, substances, manifest] = await Promise.all([
     loadJson(new URL("countries.json", DATA)),
     loadJson(new URL("substances.json", DATA)),
