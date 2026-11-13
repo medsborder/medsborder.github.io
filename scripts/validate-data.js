@@ -5,9 +5,13 @@ const read = (p) => JSON.parse(readFileSync(new URL(`../${p}`, import.meta.url),
 const countries = read("data/countries.json");
 const substances = read("data/substances.json");
 const dir = new URL("../data/sources/", import.meta.url);
-const sources = readdirSync(dir)
-  .filter((f) => f.endsWith(".json"))
-  .map((f) => read(`data/sources/${f}`));
+const files = readdirSync(dir).filter((f) => f.endsWith(".json") && f !== "index.json").sort();
+const manifest = read("data/sources/index.json");
+if (JSON.stringify([...manifest].sort()) !== JSON.stringify(files)) {
+  console.error("data/sources/index.json must list exactly the source files:\n" + files.join("\n"));
+  process.exit(1);
+}
+const sources = files.map((f) => read(`data/sources/${f}`));
 
 const errors = validateSources(
   sources,
