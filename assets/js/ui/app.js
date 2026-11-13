@@ -4,6 +4,7 @@ import { createPicker } from "./picker.js";
 import { buildMap, routeWarnings, MAX_ROUTE_COUNTRIES } from "../core/buildMap.js";
 import { buildConclusions } from "../core/conclusions.js";
 import { recommendCountries } from "../core/recommend.js";
+import { track } from "../analytics.js";
 import { serializeState, parseState, customToken } from "../core/urlState.js";
 import { buildLinks, KINDS } from "../core/links.js";
 import { normalize, search, countryIndex, substanceIndex, displayName } from "../core/search.js";
@@ -192,7 +193,13 @@ async function init() {
   const submit = h("button", { type: "submit", class: "btn primary", id: "check-btn", "aria-describedby": "submit-hint" }, t.check);
   const resetBtn = h("button", { type: "button", class: "btn", onclick: reset }, t.reset);
   const submitHint = h("p", { id: "submit-hint", class: "hint" }, t.submitNeeds);
-  const results = h("section", { id: "results", "aria-labelledby": "results-title", hidden: true });
+  const results = h("section", {
+    id: "results", "aria-labelledby": "results-title", hidden: true,
+    onclick: (e) => {
+      const a = e.target.closest?.("a[data-link-type]");
+      if (a) track("external_link_click", { link_type: a.dataset.linkType });
+    },
+  });
 
   const form = h("form", { id: "check-form", novalidate: true, onsubmit: onSubmit },
     h("fieldset", {}, h("legend", {}, lang === "uk" ? "Інгредієнти" : "Ingredients"), required.el, optional.el),
@@ -297,6 +304,7 @@ async function init() {
         try {
           await navigator.clipboard.writeText(location.href);
           copyStatus.textContent = t.linkCopied;
+          track("share_link_copied");
         } catch { copyStatus.textContent = t.copyFailed; }
       },
     }, t.copyLink);
@@ -308,6 +316,11 @@ async function init() {
       shareEl, warningsEl, conclEl, tableEl, recoEl);
     results.hidden = false;
     persist();
+    // Counts only: ingredient and country names are never sent to analytics.
+    track("check_submitted", {
+      required_count: required.getItems().length, optional_count: optional.getItems().length,
+      layover_count: layovers.getItems().length, destination_count: destinations.getItems().length,
+    });
   }
 
   function countryCard(c, map, ingredients, routeText) {
@@ -340,8 +353,8 @@ async function init() {
       h("td", { "data-label": t.colCheck },
         h("details", {},
           h("summary", {}, t.colCheck),
-          linkGroup(t.googleGroup, links.google),
-          linkGroup(t.chatgptGroup, links.chatgpt))));
+          linkGroup(t.googleGroup, links.google, "google"),
+          linkGroup(t.chatgptGroup, links.chatgpt, "chatgpt"))));
   }
 
   function sourcesCell(cell, ing) {
@@ -352,18 +365,18 @@ async function init() {
       let host = s.url;
       try { host = new URL(s.url).hostname; } catch { /* keep raw */ }
       return h("li", {},
-        h("a", { href: s.url, target: "_blank", rel: "noopener noreferrer" }, host),
+        h("a", { href: s.url, target: "_blank", rel: "noopener noreferrer", "data-link-type": "source" }, host),
         " · ", t.status[s.status], " · ", fmt(t.verified, { date: s.verifiedAt }),
         s.overridden ? [" · ", t.overridden] : null,
         s.note && !s.overridden ? h("p", { class: "note" }, s.note) : null);
     }));
   }
 
-  function linkGroup(title, urls) {
+  function linkGroup(title, urls, type) {
     return h("div", { class: "link-group" },
       h("p", { class: "link-title" }, title),
       h("ul", {}, KINDS.map((k) =>
-        h("li", {}, h("a", { href: urls[k], target: "_blank", rel: "noopener noreferrer" }, t.kinds[k])))));
+        h("li", {}, h("a", { href: urls[k], target: "_blank", rel: "noopener noreferrer", "data-link-type": type }, t.kinds[k])))));
   }
 
   sync();

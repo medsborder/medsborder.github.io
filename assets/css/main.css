@@ -120,3 +120,13 @@ details summary { cursor: pointer; font-weight: 600; }
 }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; scroll-behavior: auto !important; } }
 @media print { .site-header nav, .actions, #check-form { display: none; } }
+
+.linklike { font: inherit; color: var(--accent); background: none; border: 0; padding: 0; text-decoration: underline; cursor: pointer; }
+body { padding-bottom: calc(1rem + var(--consent-h, 0px)); }
+.consent { position: fixed; left: 0; right: 0; bottom: 0; z-index: 50; max-height: 70vh; overflow: auto; background: var(--bg); color: var(--fg); border-top: 3px solid var(--accent); box-shadow: 0 -4px 16px rgb(0 0 0 / .2); padding: 1rem; }
+.consent > * { max-width: 60rem; margin-left: auto; margin-right: auto; }
+.consent h2 { margin: 0 auto .5rem; font-size: 1.1rem; }
+.consent p { margin-top: .25rem; margin-bottom: .5rem; }
+.consent-actions { display: flex; gap: .75rem; flex-wrap: wrap; }
+.consent-actions .btn { flex: 1 1 12rem; }
+@media print { .consent { display: none; } }
