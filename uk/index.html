@@ -6,6 +6,7 @@
   <title>MedsBorder: перевірка ліків для подорожі</title>
   <meta name="description" content="Перевірте, чи дозволені ваші ліки, чи потрібен рецепт або вони заборонені в країнах на вашому маршруті.">
   <meta name="color-scheme" content="light dark">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-opRjTqQ1E5eUpc4SE9v3YoU5wuVpgtqT7zsobCj245Q=' https://*.googletagmanager.com; style-src 'self'; img-src 'self' data: https://*.google-analytics.com https://*.googletagmanager.com; connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com; base-uri 'self'; form-action 'self'; object-src 'none'">
   <link rel="canonical" href="https://medsborder.github.io/uk/">
   <link rel="alternate" hreflang="en" href="https://medsborder.github.io/en/">
   <link rel="alternate" hreflang="uk" href="https://medsborder.github.io/uk/">
@@ -13,6 +14,7 @@
   <script>try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}</script>
   <link rel="stylesheet" href="../assets/css/main.css">
   <script type="module" src="../assets/js/ui/app.js"></script>
+  <script type="module" src="../assets/js/consent.js"></script>
 </head>
 <body>
   <header class="site-header">
@@ -35,6 +37,6 @@
       <li>Натисніть «Перевірити». Ви побачите попередження, якщо правила різняться на маршруті, далі висновки й таблицю за країнами з джерелами.</li>
     </ol>
   </main>
-  <footer class="site-footer"><p>Дані взято з офіційних переліків із датою перевірки. Помітили помилку? Створіть issue в репозиторії проєкту.</p></footer>
+  <footer class="site-footer"><p>Дані взято з офіційних переліків із датою перевірки. Помітили помилку? Створіть issue в репозиторії проєкту.</p><p><a href="privacy/">Конфіденційність і cookie</a> · <button type="button" class="linklike" data-cookie-settings>Налаштування cookie</button></p></footer>
 </body>
 </html>

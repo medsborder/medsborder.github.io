@@ -6,6 +6,7 @@
   <title>MedsBorder: travel medication checker</title>
   <meta name="description" content="Check whether your medicines are allowed, need a prescription or are banned in the countries on your route.">
   <meta name="color-scheme" content="light dark">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-opRjTqQ1E5eUpc4SE9v3YoU5wuVpgtqT7zsobCj245Q=' https://*.googletagmanager.com; style-src 'self'; img-src 'self' data: https://*.google-analytics.com https://*.googletagmanager.com; connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com; base-uri 'self'; form-action 'self'; object-src 'none'">
   <link rel="canonical" href="https://medsborder.github.io/en/">
   <link rel="alternate" hreflang="en" href="https://medsborder.github.io/en/">
   <link rel="alternate" hreflang="uk" href="https://medsborder.github.io/uk/">
@@ -13,6 +14,7 @@
   <script>try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}</script>
   <link rel="stylesheet" href="../assets/css/main.css">
   <script type="module" src="../assets/js/ui/app.js"></script>
+  <script type="module" src="../assets/js/consent.js"></script>
 </head>
 <body>
   <header class="site-header">
@@ -35,6 +37,6 @@
       <li>Press Check. You see warnings when rules differ along the route, then conclusions and a table by country with sources.</li>
     </ol>
   </main>
-  <footer class="site-footer"><p>Data comes from official lists with a “verified” date. Found a mistake? Please open an issue in the project repository.</p></footer>
+  <footer class="site-footer"><p>Data comes from official lists with a “verified” date. Found a mistake? Please open an issue in the project repository.</p><p><a href="privacy/">Privacy and cookies</a> · <button type="button" class="linklike" data-cookie-settings>Cookie settings</button></p></footer>
 </body>
 </html>
