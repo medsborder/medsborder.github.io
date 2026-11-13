@@ -1,6 +1,19 @@
-# Legal Travel Medicine Checker
+# MedsBorder
 
-### Lists of Drugs
-- [gov.uk](https://www.gov.uk/) | [List of most commonly encountered drugs currently controlled under the misuse of drugs legislation](https://www.gov.uk/government/publications/controlled-drugs-list--2/list-of-most-commonly-encountered-drugs-currently-controlled-under-the-misuse-of-drugs-legislation) | [web.archive.org](http://web.archive.org/web/20250307212401/https://www.gov.uk/government/publications/controlled-drugs-list--2/list-of-most-commonly-encountered-drugs-currently-controlled-under-the-misuse-of-drugs-legislation)
+Static EN/UK site that helps travellers check whether medicines and other substances are allowed, need a prescription, or are banned in departure, transit and destination countries.
 
-Inspired by [dochq.co.uk/travel-medicine-checker/check](https://dochq.co.uk/travel-medicine-checker/check)
+Everything runs in the browser. Entered ingredients are never sent to any server of ours.
+
+> Results must be verified independently. This is neither legal nor medical advice.
+
+## Status
+
+Planning and foundation (stage 1). See `CLAUDE.md` for the product requirements.
+
+## Inspiration
+
+UX reference only: [dochq.co.uk/travel-medicine-checker/check](https://dochq.co.uk/travel-medicine-checker/check)
+
+## License
+
+See `LICENSE`.
