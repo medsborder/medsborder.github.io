@@ -43,10 +43,9 @@ test("display name format: English (Ukrainian) on the Ukrainian page", () => {
 });
 
 test("links are encoded and use the page language", () => {
-  const l = buildLinks({ lang: "en", ingredient: "Codeine", country: "Côte d'Ivoire", route: "from Ukraine to Germany" });
+  const l = buildLinks({ lang: "en", ingredient: "Codeine", country: "Côte d'Ivoire" });
   assert.match(l.google.banned, /^https:\/\/www\.google\.com\/search\?q=Is%20Codeine%20banned/);
-  assert.match(l.chatgpt.prescription, /^https:\/\/chatgpt\.com\/\?q=I%20am%20travelling/);
   assert.ok(l.google.allowed.includes("C%C3%B4te%20d'Ivoire"));
-  const uk = buildLinks({ lang: "uk", ingredient: "Codeine", country: "Німеччина", route: "з України до Німеччини" });
+  const uk = buildLinks({ lang: "uk", ingredient: "Codeine", country: "Німеччина" });
   assert.ok(decodeURIComponent(uk.google.prescription).includes("чи потрібен рецепт"));
 });

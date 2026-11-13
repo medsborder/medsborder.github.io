@@ -46,3 +46,13 @@ Layout shifts matter here: the form and the theme switcher are added by JavaScri
 - `just test` includes an offline check of every link and asset written in the static HTML (files exist, `#fragments` have an id, new-tab links use `rel="noopener noreferrer"`).
 - `just check-links` (needs network, Docker) requests every source URL in `data/sources` and every external link in the pages, and lists sources whose `verifiedAt` is older than a year or about to be. Results: `ok`, `broken` (404/410, unknown domain, certificate error, a deep link that redirects to a home page) and `unverified` (HTTP 401/403/429/5xx, timeouts, DNS hiccups). Government sites often block bots, so `unverified` only asks for a manual look; only `broken` fails the run (`--strict` also fails on `unverified`). A permanent redirect is reported with the new address to store. The report is written to `audit/out/links.json`.
 - `.github/workflows/links.yml` runs it every Monday and on demand. When a source is re-verified, update its `verifiedAt` in the same change.
+
+## AI assistant links
+
+The results page builds one prompt for the whole trip (`assets/js/core/prompt.js`) and links to ChatGPT, Claude, Perplexity and Gemini (`assets/js/core/assistants.js`). Checked on 2026-11-14:
+
+- Claude documents `https://claude.ai/new?q=...`: the text is filled in and the user presses send (long text is cut at about 14,000 characters).
+- ChatGPT (`https://chatgpt.com/?q=`) and Perplexity (`https://www.perplexity.ai/search?q=`) accept `q` but do not document it; ChatGPT does not auto-send.
+- Gemini has no documented parameter, so it opens empty and the prompt is pasted.
+- Every click also copies the prompt to the clipboard, and prompts whose encoded URL is over 8,000 characters are not put in the URL. These formats are not under our control: re-check them when a link stops filling in the prompt.
+

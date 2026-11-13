@@ -9,6 +9,9 @@ import { recommendCountries } from "../core/recommend.js";
 import { track } from "../analytics.js";
 import { serializeState, parseState, customToken } from "../core/urlState.js";
 import { buildLinks, KINDS } from "../core/links.js";
+import { buildPrompt, PROMPT_LANGS } from "../core/prompt.js";
+import { assistantLinks } from "../core/assistants.js";
+import { buildHelpLinks } from "../core/help.js";
 import { normalize, search, countryIndex, substanceIndex, displayName } from "../core/search.js";
 
 const lang = document.documentElement.lang === "uk" ? "uk" : "en";
@@ -330,7 +333,6 @@ async function init() {
     };
     const map = buildMap(route, ids, sources, new Date());
     const labelOf = new Map(ingredients.map((i) => [i.id, ingredientLabel(i)]));
-    const routeText = `${t.routePrefix}: ${map.countries.map((c) => countryName(c.alpha3)).join(t.routeSeparator)}`;
     const statusText = (s) => t.status[s];
     const icon = (status) => h("span", { class: "icon", "aria-hidden": "true" }, ICONS[status]);
 
@@ -390,7 +392,10 @@ async function init() {
     const tableEl = h("section", { "aria-labelledby": "table-title" },
       h("h3", { id: "table-title" }, t.table),
       h("p", { class: "hint" }, t.privacy),
-      map.countries.map((c) => countryCard(c, map, ingredients, routeText)));
+      map.countries.map((c) => countryCard(c, map, ingredients)));
+
+    const helpEl = helpSection(ingredients, evalCodes);
+    const askEl = askSection(ingredients, map, evalCodes);
 
     const sortByName = (codes) => [...codes].sort((a, b) => countryName(a).localeCompare(countryName(b), lang));
     const reco = recommendCountries({
@@ -427,11 +432,85 @@ async function init() {
     results.replaceChildren(
       h("h2", { id: "results-title", tabindex: "-1" }, t.results),
       h("p", { class: "route-line" }, `${t.resultsRoute}: ${map.countries.map((c) => countryName(c.alpha3)).join(t.routeSeparator)}`),
-      ...[verdictEl, toolbar, actionsEl, timelineEl, warningsEl, tableEl, recoEl].filter(Boolean));
+      ...[verdictEl, toolbar, actionsEl, helpEl, timelineEl, warningsEl, tableEl, askEl, recoEl].filter(Boolean));
     results.hidden = false;
   }
 
-  function countryCard(c, map, ingredients, routeText) {
+  // ---------- help with paperwork (Google searches) ----------
+  function helpSection(ingredients, evalCodes) {
+    const names = ingredients.map((i) => (lang === "uk" && !i.custom ? substanceById.get(i.key).names.uk[0] : ingredientEnglish(i)));
+    const help = buildHelpLinks({
+      lang, names, home: countryName(departure.getItems()[0].key), countries: evalCodes.map((c) => ({ name: countryName(c) })),
+    });
+    const a = (href, text) => h("a", { href, target: "_blank", rel: "noopener noreferrer", "data-link-type": "help" }, text);
+    return h("section", { class: "help", "aria-labelledby": "help-title" },
+      h("h3", { id: "help-title" }, t.helpTitle),
+      h("p", { class: "hint" }, t.helpIntro),
+      h("h4", {}, t.helpDocs),
+      h("ul", {}, help.documents.map((d) => h("li", {}, a(d.url, t.helpKinds[d.kind])))),
+      h("h4", {}, t.helpCountries),
+      h("ul", {}, help.countries.map((c) => h("li", {}, h("strong", {}, c.name), ": ", a(c.embassy, t.helpEmbassy), " · ", a(c.customs, t.helpCustoms)))),
+      h("p", { class: "hint" }, t.helpNote));
+  }
+
+  // ---------- one prompt for AI assistants ----------
+  function askSection(ingredients, map, evalCodes) {
+    let promptLang = lang;
+    let withFindings = false;
+    const today = new Date().toISOString().slice(0, 10);
+    const area = h("textarea", { id: "prompt-text", rows: "12", spellcheck: "false", "aria-describedby": "ask-warn" });
+    const status = h("p", { class: "field-msg", role: "status", "aria-live": "polite" });
+    const linkList = h("ul", { class: "assistants" });
+
+    const generate = () => {
+      const nameIn = (code) => countryByCode.get(code)?.name[promptLang] ?? code;
+      const roleOf = (c) => (c.roles.includes("destination") ? "destination" : c.roles.includes("transit") ? "transit" : "departure");
+      area.value = buildPrompt({
+        lang: promptLang, today,
+        ingredients: ingredients.map((i) => ({ en: ingredientEnglish(i), local: i.custom ? null : substanceById.get(i.key).names.uk[0] })),
+        route: map.countries.map((c) => ({ name: nameIn(c.alpha3), role: roleOf(c) })),
+        findings: withFindings
+          ? ingredients.flatMap((i) => evalCodes.map((c) => ({ country: nameIn(c), substance: ingredientEnglish(i), status: map.cells[c][i.id].status })))
+          : null,
+      });
+      refreshLinks();
+    };
+    const copy = async () => {
+      try {
+        await navigator.clipboard.writeText(area.value);
+        status.textContent = t.promptCopied;
+        return true;
+      } catch { status.textContent = t.promptCopyFailed; return false; }
+    };
+    function refreshLinks() {
+      linkList.replaceChildren(...assistantLinks(area.value).map((l) => h("li", {},
+        h("a", {
+          href: l.url, target: "_blank", rel: "noopener noreferrer", "data-link-type": `assistant-${l.id}`,
+          onclick: () => { copy(); },
+        }, fmt(l.prefilled ? t.openIn : t.openInEmpty, { name: l.name })))));
+    }
+    area.addEventListener("input", refreshLinks);
+
+    const langSelect = h("select", { id: "prompt-lang", onchange: (e) => { promptLang = e.target.value; generate(); } },
+      PROMPT_LANGS.map((l) => h("option", { value: l, selected: l === promptLang }, l === "uk" ? "Українська" : "English")));
+    const findingsBox = h("input", { type: "checkbox", id: "prompt-findings", onchange: (e) => { withFindings = e.target.checked; generate(); } });
+    generate();
+
+    return h("section", { class: "ask", "aria-labelledby": "ask-title" },
+      h("h3", { id: "ask-title" }, t.askTitle),
+      h("p", { class: "hint" }, t.askIntro),
+      h("p", { id: "ask-warn", class: "notice" }, t.askWarn),
+      h("div", { class: "ask-options" },
+        h("label", { for: "prompt-lang" }, t.promptLang, " "), langSelect,
+        h("p", {}, findingsBox, " ", h("label", { for: "prompt-findings" }, t.includeFindings))),
+      h("label", { for: "prompt-text", class: "link-title" }, t.promptLabel),
+      area,
+      h("div", { class: "actions" }, h("button", { type: "button", class: "btn", onclick: copy }, t.copyPrompt)),
+      status,
+      linkList);
+  }
+
+  function countryCard(c, map, ingredients) {
     const name = countryName(c.alpha3);
     const roleText = c.roles.map((r) => t.roles[r]).join(" + ");
     const worst = worstOf(ingredients.map((i) => map.cells[c.alpha3][i.id].status));
@@ -448,14 +527,12 @@ async function init() {
         h("thead", {}, h("tr", {},
           h("th", { scope: "col" }, t.colIngredient), h("th", { scope: "col" }, t.colStatus),
           h("th", { scope: "col" }, t.colSources), h("th", { scope: "col" }, t.colCheck))),
-        h("tbody", {}, ingredients.map((ing) => ingredientRow(c, ing, map, name, routeText)))));
+        h("tbody", {}, ingredients.map((ing) => ingredientRow(c, ing, map, name)))));
   }
 
-  function ingredientRow(c, ing, map, countryLabel, routeText) {
+  function ingredientRow(c, ing, map, countryLabel) {
     const cell = map.cells[c.alpha3][ing.id];
-    const links = buildLinks({
-      lang, ingredient: ingredientEnglish(ing), country: countryLabel, route: routeText,
-    });
+    const links = buildLinks({ lang, ingredient: ingredientEnglish(ing), country: countryLabel });
     return h("tr", {},
       h("th", { scope: "row", "data-label": t.colIngredient },
         ing.label),
@@ -468,8 +545,7 @@ async function init() {
       h("td", { "data-label": t.colCheck },
         h("details", {},
           h("summary", {}, t.colCheck),
-          linkGroup(t.googleGroup, links.google, "google"),
-          linkGroup(t.chatgptGroup, links.chatgpt, "chatgpt"))));
+          linkGroup(t.googleGroup, links.google, "google"))));
   }
 
   function sourcesCell(cell, ing) {
