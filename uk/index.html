@@ -6,12 +6,105 @@
   <title>MedsBorder: перевірка ліків для подорожі</title>
   <meta name="description" content="Перевірте, чи дозволені ваші ліки, чи потрібен рецепт або вони заборонені в країнах на вашому маршруті.">
   <meta name="color-scheme" content="light dark">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-opRjTqQ1E5eUpc4SE9v3YoU5wuVpgtqT7zsobCj245Q=' https://*.googletagmanager.com; style-src 'self'; img-src 'self' data: https://*.google-analytics.com https://*.googletagmanager.com; connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com; base-uri 'self'; form-action 'self'; object-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-opRjTqQ1E5eUpc4SE9v3YoU5wuVpgtqT7zsobCj245Q=' https://*.googletagmanager.com; style-src 'self'; img-src 'self' data: https://*.google-analytics.com https://*.googletagmanager.com; connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com; base-uri 'self'; form-action 'self'; object-src 'none'; manifest-src 'self'">
   <link rel="canonical" href="https://medsborder.github.io/uk/">
   <link rel="alternate" hreflang="en" href="https://medsborder.github.io/en/">
   <link rel="alternate" hreflang="uk" href="https://medsborder.github.io/uk/">
   <link rel="alternate" hreflang="x-default" href="https://medsborder.github.io/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="MedsBorder">
+  <meta property="og:title" content="MedsBorder: перевірка ліків для подорожі">
+  <meta property="og:description" content="Перевірте, чи дозволені ваші ліки, чи потрібен рецепт або вони заборонені в країнах на вашому маршруті.">
+  <meta property="og:url" content="https://medsborder.github.io/uk/">
+  <meta property="og:image" content="https://medsborder.github.io/assets/og/og-uk.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Картка: MedsBorder, перевірка ліків для подорожі. Статуси: дозволено, за рецептом, заборонено.">
+  <meta property="og:locale" content="uk_UA">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="MedsBorder: перевірка ліків для подорожі">
+  <meta name="twitter:description" content="Перевірте, чи дозволені ваші ліки, чи потрібен рецепт або вони заборонені в країнах на вашому маршруті.">
+  <meta name="twitter:image" content="https://medsborder.github.io/assets/og/og-uk.png">
+  <meta name="twitter:image:alt" content="Картка: MedsBorder, перевірка ліків для подорожі. Статуси: дозволено, за рецептом, заборонено.">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "@id": "https://medsborder.github.io/uk/#app",
+      "name": "MedsBorder",
+      "url": "https://medsborder.github.io/uk/",
+      "description": "Перевірте, чи дозволені ваші ліки, чи потрібен рецепт або вони заборонені в країнах на вашому маршруті.",
+      "applicationCategory": "TravelApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript",
+      "inLanguage": "uk",
+      "isAccessibleForFree": true,
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://medsborder.github.io/uk/#faq",
+      "inLanguage": "uk",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Чи можна взяти ліки в іншу країну?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Це залежить від країни та від діючої речовини. Ліки з контрольованими речовинами, як-от деякі знеболювальні, снодійні та препарати від СДУГ, часто потребують рецепта, довідки лікаря або дозволу, а деякі країни забороняють речовини, звичні в інших місцях. Перевірте кожну країну на маршруті та візьміть оригінальне пакування й рецепт."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Чи важливі пересадки?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Так. Правила транзиту можуть відрізнятися від правил вʼїзду, а деякі країни застосовують контроль навіть тоді, коли ви лише пересідаєте. Додайте пересадки до маршруту, щоб побачити їх у результатах."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Що означає «немає даних»?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Це означає, що в нас немає перевіреного джерела для цього інгредієнта в цій країні. Це ніколи не означає, що він дозволений. Скористайтеся посиланнями на офіційні джерела або запитайте посольство чи митницю тієї країни."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Чи можна перевірити інгредієнт, якого немає у списку?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Так. Введіть назву й додайте її як власний інгредієнт. Даних про нього в нас немає, тому ви отримаєте посилання, щоб знайти інформацію самостійно."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Чи надсилаються кудись інгредієнти й країни, які я вводжу?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Ні. Усе рахується у вашому браузері, у нас немає сервера, що отримує ваші дані. Лише якщо ви натиснете посилання Google або ChatGPT, назви передаються цим сервісам. Деталі в політиці конфіденційності."
+          }
+        }
+      ]
+    }
+  ]
+}
+  </script>
   <script>try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}</script>
+  <link rel="icon" href="../favicon.ico" sizes="48x48">
+  <link rel="icon" href="../assets/icons/icon.svg" type="image/svg+xml" sizes="any">
+  <link rel="apple-touch-icon" href="../assets/icons/apple-touch-icon.png">
+  <link rel="manifest" href="../site.webmanifest">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0f172a" media="(prefers-color-scheme: dark)">
   <link rel="stylesheet" href="../assets/css/main.css">
   <script type="module" src="../assets/js/ui/app.js"></script>
   <script type="module" src="../assets/js/consent.js"></script>
@@ -36,6 +129,14 @@
       <li>Оберіть країну відправлення, пересадки та загалом до десяти країн.</li>
       <li>Натисніть «Перевірити». Ви побачите попередження, якщо правила різняться на маршруті, далі висновки й таблицю за країнами з джерелами.</li>
     </ol>
+    <section class="faq" aria-labelledby="faq-title">
+      <h2 id="faq-title">Поширені запитання</h2>
+      <details><summary>Чи можна взяти ліки в іншу країну?</summary><p>Це залежить від країни та від діючої речовини. Ліки з контрольованими речовинами, як-от деякі знеболювальні, снодійні та препарати від СДУГ, часто потребують рецепта, довідки лікаря або дозволу, а деякі країни забороняють речовини, звичні в інших місцях. Перевірте кожну країну на маршруті та візьміть оригінальне пакування й рецепт.</p></details>
+      <details><summary>Чи важливі пересадки?</summary><p>Так. Правила транзиту можуть відрізнятися від правил вʼїзду, а деякі країни застосовують контроль навіть тоді, коли ви лише пересідаєте. Додайте пересадки до маршруту, щоб побачити їх у результатах.</p></details>
+      <details><summary>Що означає «немає даних»?</summary><p>Це означає, що в нас немає перевіреного джерела для цього інгредієнта в цій країні. Це ніколи не означає, що він дозволений. Скористайтеся посиланнями на офіційні джерела або запитайте посольство чи митницю тієї країни.</p></details>
+      <details><summary>Чи можна перевірити інгредієнт, якого немає у списку?</summary><p>Так. Введіть назву й додайте її як власний інгредієнт. Даних про нього в нас немає, тому ви отримаєте посилання, щоб знайти інформацію самостійно.</p></details>
+      <details><summary>Чи надсилаються кудись інгредієнти й країни, які я вводжу?</summary><p>Ні. Усе рахується у вашому браузері, у нас немає сервера, що отримує ваші дані. Лише якщо ви натиснете посилання Google або ChatGPT, назви передаються цим сервісам. Деталі в політиці конфіденційності.</p></details>
+    </section>
   </main>
   <footer class="site-footer"><p>Дані взято з офіційних переліків із датою перевірки. Помітили помилку? Створіть issue в репозиторії проєкту.</p><p><a href="privacy/">Конфіденційність і cookie</a> · <button type="button" class="linklike" data-cookie-settings>Налаштування cookie</button></p></footer>
 </body>

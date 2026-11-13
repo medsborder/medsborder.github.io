@@ -32,7 +32,7 @@ jobs:
       - name: Stage publishable files
         run: |
           mkdir _site
-          cp -r index.html 404.html robots.txt en uk assets data _site/
+          cp -r index.html 404.html robots.txt sitemap.xml humans.txt site.webmanifest favicon.ico en uk assets data _site/
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:

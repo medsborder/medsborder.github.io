@@ -130,3 +130,7 @@ body { padding-bottom: calc(1rem + var(--consent-h, 0px)); }
 .consent-actions { display: flex; gap: .75rem; flex-wrap: wrap; }
 .consent-actions .btn { flex: 1 1 12rem; }
 @media print { .consent { display: none; } }
+
+.faq details { border: 1px solid var(--border); border-radius: 8px; padding: .5rem .9rem; margin: .5rem 0; }
+.faq details[open] { background: var(--surface); }
+.faq p { margin: .5rem 0; }
