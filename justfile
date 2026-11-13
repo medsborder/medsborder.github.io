@@ -35,6 +35,11 @@ audit: stage
     mkdir -p audit/out
     docker run --rm --shm-size=1g --user $(id -u):$(id -g) -v "$PWD/_site":/site:ro -v "$PWD/audit/out":/audit/out medsborder-audit
 
+# Check that source URLs and external links are alive, and list stale sources (needs network, in Docker)
+check-links:
+    mkdir -p audit/out
+    docker run --rm --user $(id -u):$(id -g) -v "$PWD":/work -w /work node:22-alpine node scripts/check-links.mjs
+
 # Remove generated files
 clean:
     rm -rf _site

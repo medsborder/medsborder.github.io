@@ -24,3 +24,9 @@ test("layout-shift reservations stay in the stylesheet", () => {
   assert.match(css, /#app \{ min-height: \d+rem; \}/);
   assert.match(css, /#theme-slot \{[^}]*min-width/);
 });
+
+test("a weekly workflow checks the source links", () => {
+  const wf = read(".github/workflows/links.yml");
+  assert.match(wf, /cron:/);
+  assert.ok(wf.includes("scripts/check-links.mjs") && wf.includes("upload-artifact"));
+});

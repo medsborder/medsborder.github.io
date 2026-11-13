@@ -37,3 +37,9 @@ See `LICENSE`.
 In CI (`.github/workflows/pages.yml`) the deploy job needs both `test` and `audit`; a failed gate blocks the deploy, and pull requests run the checks without deploying. The audit server mimics GitHub Pages (gzip, cache headers, 404 page) and serves canonical/OG URLs as the local host so the checks apply. To change thresholds, edit `audit/thresholds.json` and say why in the commit.
 
 Layout shifts matter here: the form and the theme switcher are added by JavaScript, so `#app` and `#theme-slot` reserve their size in `assets/css/main.css`. If you add fields to the form, re-measure and update `#app { min-height }`.
+
+## Link checks
+
+- `just test` includes an offline check of every link and asset written in the static HTML (files exist, `#fragments` have an id, new-tab links use `rel="noopener noreferrer"`).
+- `just check-links` (needs network, Docker) requests every source URL in `data/sources` and every external link in the pages, and lists sources whose `verifiedAt` is older than a year or about to be. Results: `ok`, `broken` (404/410, unknown domain, certificate error, a deep link that redirects to a home page) and `unverified` (HTTP 401/403/429/5xx, timeouts, DNS hiccups). Government sites often block bots, so `unverified` only asks for a manual look; only `broken` fails the run (`--strict` also fails on `unverified`). A permanent redirect is reported with the new address to store. The report is written to `audit/out/links.json`.
+- `.github/workflows/links.yml` runs it every Monday and on demand. When a source is re-verified, update its `verifiedAt` in the same change.
