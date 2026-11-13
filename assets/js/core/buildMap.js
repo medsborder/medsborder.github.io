@@ -76,9 +76,18 @@ function resolveCell(alpha3, substanceId, transitOnly, sources, nowMs) {
  * yields "unknown".
  */
 export function buildMap(route, substanceIds, sources, now = new Date()) {
-  const nowMs = now.getTime();
   const countries = routeCountries(route);
   const substances = [...new Set(substanceIds)];
+  const cells = buildCells(countries, substances, sources, now);
+  return { countries, substances, cells };
+}
+
+/**
+ * Status cells for any list of { alpha3, roles } (no route-size limit).
+ * Used by buildMap and by recommendations over the whole country list.
+ */
+export function buildCells(countries, substances, sources, now = new Date()) {
+  const nowMs = now.getTime();
   const cells = {};
   for (const { alpha3, roles } of countries) {
     const transitOnly = roles.length === 1 && roles[0] === "transit";
@@ -87,7 +96,7 @@ export function buildMap(route, substanceIds, sources, now = new Date()) {
       cells[alpha3][id] = resolveCell(alpha3, id, transitOnly, sources, nowMs);
     }
   }
-  return { countries, substances, cells };
+  return cells;
 }
 
 /**

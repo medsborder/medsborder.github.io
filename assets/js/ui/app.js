@@ -3,6 +3,8 @@ import { STRINGS } from "./i18n.js";
 import { createPicker } from "./picker.js";
 import { buildMap, routeWarnings, MAX_ROUTE_COUNTRIES } from "../core/buildMap.js";
 import { buildConclusions } from "../core/conclusions.js";
+import { recommendCountries } from "../core/recommend.js";
+import { serializeState, parseState, customToken } from "../core/urlState.js";
 import { buildLinks, KINDS } from "../core/links.js";
 import { normalize, search, countryIndex, substanceIndex, displayName } from "../core/search.js";
 
@@ -124,6 +126,69 @@ async function init() {
     canAdd: (i) => countryCanAdd(i, destinations), onChange: sync,
   });
 
+  // ---------- shareable state (URL fragment) ----------
+  const tokenOf = (i) => (i.custom ? customToken(i.text) : i.key);
+  const uiState = () => ({
+    required: required.getItems().map(tokenOf),
+    optional: optional.getItems().map(tokenOf),
+    from: departure.getItems()[0]?.key ?? null,
+    via: layovers.getItems().map((i) => i.key),
+    to: destinations.getItems().map((i) => i.key),
+  });
+  const langLink = document.querySelector(".site-header a[hreflang]");
+  const langBase = langLink?.getAttribute("href") ?? "";
+
+  function persist() {
+    const frag = serializeState(uiState());
+    try { history.replaceState(null, "", frag ? `#${frag}` : location.pathname + location.search); } catch { /* ignore */ }
+    langLink?.setAttribute("href", frag ? `${langBase}#${frag}` : langBase);
+  }
+
+  function applyState(st) {
+    const ids = new Set();
+    const ingredients = (tokens) => tokens.flatMap((tok) => {
+      let item;
+      if (tok.startsWith("~")) {
+        const text = tok.slice(1);
+        if (sIndex.some((e) => e.norm.includes(normalize(text)))) return [];
+        item = { key: `custom:${text.toLowerCase()}`, label: text, custom: true, text };
+      } else {
+        const sub = substanceById.get(tok);
+        if (!sub) return [];
+        item = { key: sub.id, label: displayName(sub, lang) };
+      }
+      const id = ingredientId(item);
+      if (ids.has(id)) return [];
+      ids.add(id);
+      return [item];
+    });
+    const used = new Set();
+    let budget = MAX_ROUTE_COUNTRIES;
+    const places = (codes) => codes.flatMap((code) => {
+      if (!countryByCode.has(code) || used.has(code) || budget <= 0) return [];
+      used.add(code);
+      budget -= 1;
+      return [{ key: code, label: countryName(code) }];
+    });
+    required.setItems(ingredients(st.required));
+    optional.setItems(ingredients(st.optional));
+    departure.setItems(places(st.from ? [st.from] : []));
+    layovers.setItems(places(st.via));
+    destinations.setItems(places(st.to));
+    sync();
+  }
+
+  const canSubmit = () =>
+    required.getItems().length >= 1 && departure.getItems().length === 1 && destinations.getItems().length >= 1;
+
+  function restoreFromHash() {
+    const next = location.hash.replace(/^#/, "");
+    if (next === serializeState(uiState())) return;
+    applyState(parseState(location.hash));
+    if (canSubmit()) render();
+    else { results.hidden = true; results.replaceChildren(); }
+  }
+
   const submit = h("button", { type: "submit", class: "btn primary", id: "check-btn", "aria-describedby": "submit-hint" }, t.check);
   const resetBtn = h("button", { type: "button", class: "btn", onclick: reset }, t.reset);
   const submitHint = h("p", { id: "submit-hint", class: "hint" }, t.submitNeeds);
@@ -142,7 +207,7 @@ async function init() {
     const full = total >= MAX_ROUTE_COUNTRIES;
     layovers.setDisabled(full, fmt(t.routeFull, { n: MAX_ROUTE_COUNTRIES }));
     destinations.setDisabled(full, fmt(t.routeFull, { n: MAX_ROUTE_COUNTRIES }));
-    const ok = required.getItems().length >= 1 && departure.getItems().length === 1 && destinations.getItems().length >= 1;
+    const ok = canSubmit();
     submit.setAttribute("aria-disabled", String(!ok));
     submit.classList.toggle("disabled", !ok);
     submitHint.hidden = ok;
@@ -153,6 +218,7 @@ async function init() {
     results.hidden = true;
     results.replaceChildren();
     sync();
+    persist();
     required.focus();
   }
 
@@ -212,11 +278,36 @@ async function init() {
       h("p", { class: "hint" }, t.privacy),
       map.countries.map((c) => countryCard(c, map, ingredients, routeText)));
 
+    const sortByName = (codes) => [...codes].sort((a, b) => countryName(a).localeCompare(countryName(b), lang));
+    const reco = recommendCountries({
+      sources, countries, ingredients, routeCodes: map.countries.map((c) => c.alpha3),
+    });
+    const recoEl = h("section", { "aria-labelledby": "reco-title" },
+      h("h3", { id: "reco-title" }, t.recommendations),
+      h("p", { class: "hint" }, t.recoIntro),
+      h("dl", { class: "conclusions" },
+        h("dt", {}, t.recoAll), h("dd", {}, list(sortByName(reco.allAllowed))),
+        h("dt", {}, t.recoRequired), h("dd", {}, list(sortByName(reco.requiredAllowed)))),
+      ingredients.some((i) => i.custom) ? h("p", { class: "hint" }, t.recoCustom) : null);
+
+    const copyStatus = h("span", { class: "field-msg", role: "status", "aria-live": "polite" });
+    const copyBtn = h("button", {
+      type: "button", class: "btn",
+      onclick: async () => {
+        try {
+          await navigator.clipboard.writeText(location.href);
+          copyStatus.textContent = t.linkCopied;
+        } catch { copyStatus.textContent = t.copyFailed; }
+      },
+    }, t.copyLink);
+    const shareEl = h("div", { class: "share" }, copyBtn, " ", copyStatus, h("p", { class: "hint" }, t.shareNote));
+
     results.replaceChildren(
       h("h2", { id: "results-title", tabindex: "-1" }, t.results),
       h("p", { class: "route-line" }, `${t.resultsRoute}: ${map.countries.map((c) => countryName(c.alpha3)).join(t.routeSeparator)}`),
-      warningsEl, conclEl, tableEl);
+      shareEl, warningsEl, conclEl, tableEl, recoEl);
     results.hidden = false;
+    persist();
   }
 
   function countryCard(c, map, ingredients, routeText) {
@@ -276,6 +367,8 @@ async function init() {
   }
 
   sync();
+  window.addEventListener("hashchange", restoreFromHash);
+  if (location.hash.length > 1) restoreFromHash();
 }
 
 init();
