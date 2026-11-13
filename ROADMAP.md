@@ -6,6 +6,7 @@ What is done and what is still missing on MedsBorder. Everything here is a plan,
 
 ## Done
 
+- Three-step wizard (medicines, route, results) with a verdict, a "what to do" list (do not bring / prepare / check yourself), a timeline along the route and an alternative route; every ingredient is treated equally.
 - Bilingual (EN/UK) static site, light/dark/system theme, accessible form (ARIA combobox), results table (cards on mobile), conclusions, recommendations, route-conflict warnings, shareable links.
 - Consent banner and Google Tag Manager loaded only after consent; privacy and cookie policy; terms of use and disclaimer.
 - SEO (metadata, JSON-LD, sitemap, icons, social cards), CSP, axe and Lighthouse gates, link checks, unit tests.

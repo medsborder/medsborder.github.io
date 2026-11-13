@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert";
 import { recommendCountries } from "../assets/js/core/recommend.js";
+import { coveredCountries } from "../assets/js/core/coverage.js";
 
 const src = (c, entries) => ({
   id: `s-${c}`, url: "https://example.org", scope: "country", countries: [c],
@@ -16,24 +17,26 @@ const sources = [
   src("DDD", [["r", "allowed"]]), // no data for "o"
   src("HHH", [["r", "allowed"], ["o", "allowed"]]),
 ];
-const ing = [{ id: "r", required: true }, { id: "o", required: false }];
+const ing = [{ id: "r" }, { id: "o" }];
 
 test("recommends only countries with data, excluding the route and hidden countries", () => {
   const rec = recommendCountries({ sources, countries, ingredients: ing, routeCodes: ["EEE"] });
   assert.deepStrictEqual(rec.allAllowed, ["AAA"]);
-  assert.deepStrictEqual(rec.requiredAllowed, ["AAA", "BBB", "DDD"]);
+  assert.deepStrictEqual(rec.prescriptionOnly, ["BBB"]);
 });
 
 test("route countries are not recommended again", () => {
   const rec = recommendCountries({ sources, countries, ingredients: ing, routeCodes: ["AAA"] });
   assert.deepStrictEqual(rec.allAllowed, []);
-  assert.ok(!rec.requiredAllowed.includes("AAA"));
 });
 
-test("custom ingredient (no data) yields no recommendation that needs it", () => {
+test("a custom ingredient (no data) yields no recommendation", () => {
   const rec = recommendCountries({
-    sources, countries, routeCodes: [],
-    ingredients: [{ id: "custom:x", required: true }, { id: "r", required: false }],
+    sources, countries, routeCodes: [], ingredients: [{ id: "custom:x" }, { id: "r" }],
   });
-  assert.deepStrictEqual(rec, { allAllowed: [], requiredAllowed: [] });
+  assert.deepStrictEqual(rec, { allAllowed: [], prescriptionOnly: [] });
+});
+
+test("coveredCountries lists every country that has a source", () => {
+  assert.deepStrictEqual([...coveredCountries(sources)].sort(), ["AAA", "BBB", "CCC", "DDD", "HHH"]);
 });

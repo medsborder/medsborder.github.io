@@ -101,12 +101,26 @@ details.more { border: 1px solid var(--border); border-radius: 8px; padding: .5r
 .step-panel { margin: 1.25rem 0; }
 .step-panel h2 { margin: 0 0 .5rem; }
 .step-panel .actions { margin-top: 1.25rem; }
-.chip-mode { font: inherit; font-size: .8rem; font-weight: 600; cursor: pointer; border-radius: 999px; padding: .1rem .55rem; border: 1px solid var(--accent); background: var(--accent); color: var(--accent-fg); }
-.chip-mode.is-optional { background: transparent; color: var(--fg); border-style: dashed; border-color: var(--muted); }
 details.layovers { margin-top: 1rem; }
 .route-preview { margin-top: 1.25rem; }
 .route-strip { list-style: none; margin: .25rem 0 0; padding: 0; display: flex; flex-wrap: wrap; align-items: center; gap: .4rem; }
 .route-strip .stop + .stop::before { content: "→" / ""; margin-right: .4rem; color: var(--muted); }
+.badge { font-size: .75rem; font-weight: 600; padding: .05rem .4rem; border-radius: 4px; border: 1px solid var(--allowed-fg); background: var(--allowed-bg); color: var(--allowed-fg); }
+.option[aria-selected="true"] .badge, .option:hover .badge { background: transparent; color: inherit; border-color: currentColor; }
+.badge-muted { border-color: var(--border); background: var(--surface); color: var(--muted); }
+.action-group { margin: 1rem 0; padding: .25rem 1rem .5rem; border-left: 6px solid currentColor; border-radius: 6px; }
+.action-group h4 { margin: .5rem 0 0; }
+.action-group ul { margin: .25rem 0 0; padding-left: 1.2rem; }
+.action-stop { color: var(--banned-fg); background: var(--banned-bg); }
+.action-prepare { color: var(--prescription-fg); background: var(--prescription-bg); }
+.action-verify { color: var(--unknown-fg); background: var(--unknown-bg); }
+.action-ok { color: var(--allowed-fg); background: var(--allowed-bg); }
+.action-group .hint { color: inherit; opacity: .9; }
+.timeline-row { margin: .75rem 0; }
+.timeline-name { margin: 0 0 .25rem; font-weight: 700; }
+.timeline-row ol { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; align-items: center; gap: .3rem; }
+.timeline-row .stop { padding: .15rem .6rem; border-radius: 999px; border: 1px solid currentColor; font-size: .9rem; font-weight: 600; }
+.timeline-row .stop + .stop::before { content: "→" / ""; margin-right: .35rem; color: var(--muted); }
 .route-strip .stop-name { font-weight: 700; }
 .warnings { background: var(--warn-bg); border: 2px solid var(--warn-border); border-radius: 8px; padding: .5rem 1rem; margin: 1rem 0; }
 .conclusions dt { font-weight: 600; margin-top: .75rem; }

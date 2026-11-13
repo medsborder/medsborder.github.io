@@ -2,7 +2,9 @@ import { h, fmt } from "./dom.js";
 import { STRINGS } from "./i18n.js";
 import { createPicker } from "./picker.js";
 import { buildMap, routeWarnings, MAX_ROUTE_COUNTRIES } from "../core/buildMap.js";
-import { buildConclusions } from "../core/conclusions.js";
+import { buildActions, buildTimeline, buildVerdict, ACTION_GROUPS } from "../core/conclusions.js";
+import { worstOf } from "../core/status.js";
+import { coveredCountries } from "../core/coverage.js";
 import { recommendCountries } from "../core/recommend.js";
 import { track } from "../analytics.js";
 import { serializeState, parseState, customToken } from "../core/urlState.js";
@@ -13,6 +15,7 @@ const lang = document.documentElement.lang === "uk" ? "uk" : "en";
 const t = STRINGS[lang];
 const DATA = new URL("../../../data/", import.meta.url);
 const ICONS = { allowed: "✓", prescription: "℞", restricted: "!", banned: "✕", unknown: "?" };
+const ACTION_ICONS = { stop: "✕", prepare: "℞", verify: "?", ok: "✓" };
 
 // ---------- theme ----------
 function initTheme(slot) {
@@ -53,10 +56,6 @@ async function loadData() {
 }
 
 // ---------- app ----------
-// How bad a status is for the traveller. "unknown" sits above "allowed" on purpose:
-// no data never reads as allowed.
-const SEVERITY = { allowed: 0, unknown: 1, prescription: 2, restricted: 3, banned: 4 };
-const worstOf = (statuses) => statuses.reduce((a, b) => (SEVERITY[b] > SEVERITY[a] ? b : a), "allowed");
 const VERDICT_KEY = { banned: "verdictBanned", prescription: "verdictPrescription", unknown: "verdictUnknown", allowed: "verdictAllowed" };
 
 async function init() {
@@ -86,8 +85,7 @@ async function init() {
   const routeCodes = () => [
     ...departure.getItems(), ...layovers.getItems(), ...destinations.getItems(),
   ].map((i) => i.key);
-  const requiredItems = () => meds.getItems().filter((i) => !i.optional);
-  const optionalItems = () => meds.getItems().filter((i) => i.optional);
+  const covered = coveredCountries(sources);
 
   function ingredientCanAdd(item) {
     const id = ingredientId(item);
@@ -117,9 +115,9 @@ async function init() {
     search: (q) => search(sIndex, q, {
       exclude: new Set(meds.getItems().filter((i) => !i.custom).map((i) => i.key)),
     }),
-    chipMode: { required: t.mustHave, optional: t.niceToHave, label: (it, mode) => fmt(t.modeLabel, { name: it.label, mode }) },
   });
-  const countrySearch = (q) => search(cIndex, q, { exclude: new Set(routeCodes()) });
+  const countrySearch = (q) => search(cIndex, q, { exclude: new Set(routeCodes()) })
+    .map((c) => ({ ...c, badge: covered.has(c.key) ? t.hasData : null }));
   const departure = createPicker({
     ...common, label: t.departure, hint: t.departureHint, single: true, search: countrySearch,
     canAdd: (i) => countryCanAdd(i, departure), onChange: changed,
@@ -138,8 +136,7 @@ async function init() {
   // Results have no "step" part, so links shared from older versions keep working.
   const tokenOf = (i) => (i.custom ? customToken(i.text) : i.key);
   const uiState = () => ({
-    required: requiredItems().map(tokenOf),
-    optional: optionalItems().map(tokenOf),
+    ingredients: meds.getItems().map(tokenOf),
     from: departure.getItems()[0]?.key ?? null,
     via: layovers.getItems().map((i) => i.key),
     to: destinations.getItems().map((i) => i.key),
@@ -167,7 +164,7 @@ async function init() {
 
   function applyState(st) {
     const ids = new Set();
-    const ingredients = (tokens, optional) => tokens.flatMap((tok) => {
+    const ingredients = (tokens) => tokens.flatMap((tok) => {
       let item;
       if (tok.startsWith("~")) {
         const text = tok.slice(1);
@@ -181,7 +178,7 @@ async function init() {
       const id = ingredientId(item);
       if (ids.has(id)) return [];
       ids.add(id);
-      return [optional ? { ...item, optional: true } : item];
+      return [item];
     });
     const used = new Set();
     let budget = MAX_ROUTE_COUNTRIES;
@@ -191,7 +188,7 @@ async function init() {
       budget -= 1;
       return [{ key: code, label: countryName(code) }];
     });
-    meds.setItems([...ingredients(st.required, false), ...ingredients(st.optional, true)]);
+    meds.setItems(ingredients(st.ingredients));
     departure.setItems(places(st.from ? [st.from] : []));
     layovers.setItems(places(st.via));
     destinations.setItems(places(st.to));
@@ -199,7 +196,7 @@ async function init() {
     sync();
   }
 
-  const canStep2 = () => requiredItems().length >= 1;
+  const canStep2 = () => meds.getItems().length >= 1;
   const canSubmit = () => canStep2() && departure.getItems().length === 1 && destinations.getItems().length >= 1;
 
   function restoreFromHash(focus = false) {
@@ -216,16 +213,17 @@ async function init() {
   const checkBtn = h("button", { type: "submit", class: "btn primary" }, t.check);
   const backBtn = h("button", { type: "button", class: "btn", onclick: () => show(1, "push") }, t.back);
   const routeList = h("ol", { class: "route-strip", "aria-live": "polite" });
+  const routeNote = h("p", { class: "hint" });
   const layoverDetails = h("details", { class: "layovers" }, h("summary", {}, t.layoversSummary), layovers.el);
   const title1 = h("h2", { id: "step-1-title", tabindex: "-1" }, t.ingredientsTitle);
   const title2 = h("h2", { id: "step-2-title", tabindex: "-1" }, t.routeTitle);
 
   const panel1 = h("section", { class: "step-panel", "aria-labelledby": "step-1-title" },
-    title1, h("p", { class: "hint" }, t.modeHelp), meds.el, msg1,
+    title1, meds.el, msg1,
     h("div", { class: "actions" }, nextBtn));
   const panel2 = h("section", { class: "step-panel", "aria-labelledby": "step-2-title", hidden: true },
     title2, departure.el, layoverDetails, destinations.el,
-    h("div", { class: "route-preview" }, h("p", { class: "link-title" }, t.routePreview), routeList),
+    h("div", { class: "route-preview" }, h("p", { class: "link-title" }, t.routePreview), routeList, routeNote),
     msg2,
     h("div", { class: "actions" }, backBtn, checkBtn));
 
@@ -258,9 +256,12 @@ async function init() {
       ...layovers.getItems().map((i) => [i, "transit"]),
       ...destinations.getItems().map((i) => [i, "destination"]),
     ];
+    const noData = stops.filter(([i, role]) => role !== "departure" && !covered.has(i.key)).map(([i]) => i.label);
+    routeNote.textContent = noData.length ? fmt(t.routeNoData, { names: noData.join(", ") }) : "";
     routeList.replaceChildren(...(stops.length
       ? stops.map(([i, role]) => h("li", { class: `stop stop-${role}` },
-        h("span", { class: "stop-name" }, i.label), " ", h("span", { class: "role" }, t.roles[role])))
+        h("span", { class: "stop-name" }, i.label), " ", h("span", { class: "role" }, t.roles[role]),
+        role !== "departure" && !covered.has(i.key) ? [" ", h("span", { class: "badge badge-muted" }, t.noDataTag)] : null))
       : [h("li", { class: "muted" }, t.routeEmpty)]));
   }
 
@@ -312,7 +313,7 @@ async function init() {
       show(3, "push");
       // Counts only: ingredient and country names are never sent to analytics.
       track("check_submitted", {
-        required_count: requiredItems().length, optional_count: optionalItems().length,
+        ingredient_count: meds.getItems().length,
         layover_count: layovers.getItems().length, destination_count: destinations.getItems().length,
       });
     }
@@ -320,40 +321,60 @@ async function init() {
 
   // ---------- results ----------
   function render() {
-    const ingredients = [
-      ...requiredItems().map((i) => ({ ...i, id: ingredientId(i), required: true })),
-      ...optionalItems().map((i) => ({ ...i, id: ingredientId(i), required: false })),
-    ];
+    const ingredients = meds.getItems().map((i) => ({ ...i, id: ingredientId(i) }));
+    const ids = ingredients.map((i) => i.id);
     const route = {
       departure: departure.getItems()[0].key,
       transit: layovers.getItems().map((i) => i.key),
       destinations: destinations.getItems().map((i) => i.key),
     };
-    const map = buildMap(route, ingredients.map((i) => i.id), sources, new Date());
+    const map = buildMap(route, ids, sources, new Date());
     const labelOf = new Map(ingredients.map((i) => [i.id, ingredientLabel(i)]));
     const routeText = `${t.routePrefix}: ${map.countries.map((c) => countryName(c.alpha3)).join(t.routeSeparator)}`;
     const statusText = (s) => t.status[s];
+    const icon = (status) => h("span", { class: "icon", "aria-hidden": "true" }, ICONS[status]);
 
     const warnings = routeWarnings(map, substances);
+    // the departure-only country is context: export rules are not in our data
     const evalCodes = map.countries.filter((c) => !(c.roles.length === 1 && c.roles[0] === "departure")).map((c) => c.alpha3);
-    const concl = buildConclusions(map, ingredients, evalCodes);
     const list = (codes) => (codes.length ? codes.map(countryName).join(", ") : t.none);
 
     // verdict: the one-line answer, worst case first
-    const worstIn = (code) => worstOf(ingredients.map((i) => map.cells[code][i.id].status));
-    const worst = evalCodes.map(worstIn);
-    const count = (...kinds) => worst.filter((w) => kinds.includes(w)).length;
-    const bad = count("banned", "restricted");
-    let kind = "allowed";
-    let n = evalCodes.length;
-    if (bad) { kind = worst.includes("banned") ? "banned" : "restricted"; n = bad; }
-    else if (count("prescription")) { kind = "prescription"; n = count("prescription"); }
-    else if (count("unknown")) { kind = "unknown"; n = count("unknown"); }
-    const verdictEl = h("div", { class: `verdict status-${kind}` },
-      h("p", { class: "verdict-title" },
-        h("span", { class: "icon", "aria-hidden": "true" }, ICONS[kind]), " ",
-        fmt(t[VERDICT_KEY[kind === "restricted" ? "banned" : kind]], { n, total: evalCodes.length })),
+    const verdict = buildVerdict(map, ids, evalCodes);
+    const verdictEl = h("div", { class: `verdict status-${verdict.kind}` },
+      h("p", { class: "verdict-title" }, icon(verdict.kind), " ",
+        fmt(t[VERDICT_KEY[verdict.kind === "restricted" ? "banned" : verdict.kind]], { n: verdict.n, total: verdict.total })),
       h("p", { class: "verdict-note" }, t.verdictNote));
+
+    // what to do: grouped by action, most urgent first
+    const actions = buildActions(map, ids, evalCodes);
+    const countryWithRole = (x) => {
+      const bits = [x.roles.map((r) => t.roles[r].toLowerCase()).join(" + ")];
+      if (x.status !== "allowed" && x.status !== "unknown") bits.push(t.statusShort[x.status]);
+      if (x.stale) bits.push(t.staleShort);
+      return `${countryName(x.country)} (${bits.join(", ")})`;
+    };
+    const actionsEl = h("section", { class: "actions-list", "aria-labelledby": "todo-title" },
+      h("h3", { id: "todo-title" }, t.actionsTitle),
+      ACTION_GROUPS.filter((g) => actions[g].length).map((g) =>
+        h("div", { class: `action-group action-${g}` },
+          h("h4", {}, h("span", { class: "icon", "aria-hidden": "true" }, ACTION_ICONS[g]), " ", t.actionTitles[g]),
+          h("p", { class: "hint" }, t.actionHints[g]),
+          h("ul", {}, actions[g].map((item) => h("li", {},
+            h("strong", {}, labelOf.get(item.substance)), ": ",
+            fmt(t.actionLine, { countries: item.countries.map(countryWithRole).join("; ") })))))));
+
+    // the same statuses along the route, one line per ingredient
+    const timelineEl = h("section", { class: "timeline", "aria-labelledby": "timeline-title" },
+      h("h3", { id: "timeline-title" }, t.timelineTitle),
+      buildTimeline(map, ids).map((row) => {
+        const name = labelOf.get(row.substance);
+        const stops = row.stops.map((x) => `${countryName(x.country)}: ${statusText(x.status)}`).join("; ");
+        return h("div", { class: "timeline-row" },
+          h("p", { class: "timeline-name" }, name),
+          h("ol", { "aria-label": fmt(t.stopsLabel, { name, stops }) }, row.stops.map((x) =>
+            h("li", { class: `stop status-${x.status}`, "aria-hidden": "true" }, icon(x.status), " ", countryName(x.country)))));
+      }));
 
     const warningsEl = warnings.length
       ? h("section", { class: "warnings", "aria-labelledby": "warn-title" },
@@ -365,13 +386,6 @@ async function init() {
           strict: w.strict.map((x) => `${countryName(x.country)} (${statusText(x.status)})`).join(", "),
         })))))
       : null;
-
-    const conclEl = h("details", { class: "more" },
-      h("summary", {}, t.moreConclusions),
-      h("dl", { class: "conclusions" }, Object.keys(t.conclusionTitles).flatMap((k) => [
-        h("dt", {}, t.conclusionTitles[k]),
-        h("dd", {}, list(concl[k])),
-      ])));
 
     const tableEl = h("section", { "aria-labelledby": "table-title" },
       h("h3", { id: "table-title" }, t.table),
@@ -387,7 +401,7 @@ async function init() {
       h("p", { class: "hint" }, t.recoIntro),
       h("dl", { class: "conclusions" },
         h("dt", {}, t.recoAll), h("dd", {}, list(sortByName(reco.allAllowed))),
-        h("dt", {}, t.recoRequired), h("dd", {}, list(sortByName(reco.requiredAllowed)))),
+        h("dt", {}, t.recoPrescription), h("dd", {}, list(sortByName(reco.prescriptionOnly)))),
       ingredients.some((i) => i.custom) ? h("p", { class: "hint" }, t.recoCustom) : null);
 
     const copyStatus = h("span", { class: "field-msg", role: "status", "aria-live": "polite" });
@@ -413,7 +427,7 @@ async function init() {
     results.replaceChildren(
       h("h2", { id: "results-title", tabindex: "-1" }, t.results),
       h("p", { class: "route-line" }, `${t.resultsRoute}: ${map.countries.map((c) => countryName(c.alpha3)).join(t.routeSeparator)}`),
-      ...[verdictEl, toolbar, warningsEl, tableEl, recoEl, conclEl].filter(Boolean));
+      ...[verdictEl, toolbar, actionsEl, timelineEl, warningsEl, tableEl, recoEl].filter(Boolean));
     results.hidden = false;
   }
 
@@ -425,8 +439,10 @@ async function init() {
     return h("details", { class: "country", open: worst !== "allowed" && !departureOnly },
       h("summary", {},
         h("span", { class: "c-name" }, name), " ", h("span", { class: "role" }, roleText), " ",
-        h("span", { class: `status status-${worst}` },
-          h("span", { class: "icon", "aria-hidden": "true" }, ICONS[worst]), " ", t.status[worst])),
+        departureOnly
+          ? h("span", { class: "muted" }, t.departureNote)
+          : h("span", { class: `status status-${worst}` },
+            h("span", { class: "icon", "aria-hidden": "true" }, ICONS[worst]), " ", t.status[worst])),
       h("table", { class: "results" },
         h("caption", { class: "sr-only" }, `${t.table}: ${name}`),
         h("thead", {}, h("tr", {},
@@ -442,7 +458,7 @@ async function init() {
     });
     return h("tr", {},
       h("th", { scope: "row", "data-label": t.colIngredient },
-        ing.label, " ", h("span", { class: "tag" }, ing.required ? t.reqTag : t.optTag)),
+        ing.label),
       h("td", { "data-label": t.colStatus },
         h("span", { class: `status status-${cell.status}` },
           h("span", { class: "icon", "aria-hidden": "true" }, ICONS[cell.status]), " ", t.status[cell.status]),
