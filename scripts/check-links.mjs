@@ -15,7 +15,7 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
 const sourceFiles = readdirSync(new URL("data/sources/", root)).filter((f) => f.endsWith(".json") && f !== "index.json");
 const sources = sourceFiles.map((f) => JSON.parse(read(`data/sources/${f}`)));
-const pages = ["index.html", "404.html", "en/index.html", "uk/index.html", "en/privacy/index.html", "uk/privacy/index.html"];
+const pages = ["index.html", "404.html", "en/index.html", "uk/index.html", "en/privacy/index.html", "uk/privacy/index.html", "en/terms/index.html", "uk/terms/index.html"];
 
 // url -> where it is used
 const targets = new Map();

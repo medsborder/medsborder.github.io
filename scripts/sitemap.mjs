@@ -9,6 +9,8 @@ export const PAGES = [
   { path: "/uk/", alt: { en: "/en/", uk: "/uk/" }, xdefault: "/" },
   { path: "/en/privacy/", alt: { en: "/en/privacy/", uk: "/uk/privacy/" }, xdefault: "/en/privacy/" },
   { path: "/uk/privacy/", alt: { en: "/en/privacy/", uk: "/uk/privacy/" }, xdefault: "/en/privacy/" },
+  { path: "/en/terms/", alt: { en: "/en/terms/", uk: "/uk/terms/" }, xdefault: "/en/terms/" },
+  { path: "/uk/terms/", alt: { en: "/en/terms/", uk: "/uk/terms/" }, xdefault: "/en/terms/" },
 ];
 
 export function buildSitemap(lastmod) {

@@ -3,7 +3,7 @@ import assert from "node:assert";
 import { createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 
-const PAGES = ["index.html", "404.html", "en/index.html", "uk/index.html", "en/privacy/index.html", "uk/privacy/index.html"];
+const PAGES = ["index.html", "404.html", "en/index.html", "uk/index.html", "en/privacy/index.html", "uk/privacy/index.html", "en/terms/index.html", "uk/terms/index.html"];
 const read = (p) => readFileSync(new URL(`../${p}`, import.meta.url), "utf8");
 const csp = (html) => html.match(/<meta http-equiv="Content-Security-Policy" content="([^"]*)"/)?.[1];
 
@@ -48,7 +48,7 @@ test("every page loads the consent script and offers cookie settings", () => {
 });
 
 test("EN and UK pages are structurally equal", () => {
-  for (const [a, b] of [["en/index.html", "uk/index.html"], ["en/privacy/index.html", "uk/privacy/index.html"]]) {
+  for (const [a, b] of [["en/index.html", "uk/index.html"], ["en/privacy/index.html", "uk/privacy/index.html"], ["en/terms/index.html", "uk/terms/index.html"]]) {
     const count = (html, tag) => (html.match(new RegExp(`<${tag}[ >]`, "g")) ?? []).length;
     for (const tag of ["h1", "h2", "li", "p", "a", "button"]) {
       assert.strictEqual(count(read(a), tag), count(read(b), tag), `${a} vs ${b}: ${tag}`);

@@ -32,4 +32,18 @@
     <xhtml:link rel="alternate" hreflang="uk" href="https://medsborder.github.io/uk/privacy/"/>
     <xhtml:link rel="alternate" hreflang="x-default" href="https://medsborder.github.io/en/privacy/"/>
   </url>
+  <url>
+    <loc>https://medsborder.github.io/en/terms/</loc>
+    <lastmod>2026-11-13</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://medsborder.github.io/en/terms/"/>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://medsborder.github.io/uk/terms/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://medsborder.github.io/en/terms/"/>
+  </url>
+  <url>
+    <loc>https://medsborder.github.io/uk/terms/</loc>
+    <lastmod>2026-11-13</lastmod>
+    <xhtml:link rel="alternate" hreflang="en" href="https://medsborder.github.io/en/terms/"/>
+    <xhtml:link rel="alternate" hreflang="uk" href="https://medsborder.github.io/uk/terms/"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://medsborder.github.io/en/terms/"/>
+  </url>
 </urlset>
