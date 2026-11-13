@@ -1,0 +1,11 @@
+{
+  "name": "medsborder-audit",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "axe-core": "^4.10.0",
+    "chrome-launcher": "^1.1.0",
+    "lighthouse": "^12.0.0",
+    "puppeteer-core": "^23.0.0"
+  }
+}

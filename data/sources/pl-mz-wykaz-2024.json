@@ -1,0 +1,59 @@
+{
+  "id": "pl-mz-wykaz-2024",
+  "title": "Poland: Minister of Health regulation on the list of psychotropic substances, narcotic drugs and new psychoactive substances (consolidated text announced 17 June 2024; later amendments not incorporated), read together with Art. 31-34 of the Act on Counteracting Drug Addiction",
+  "url": "https://api.sejm.gov.pl/eli/acts/DU/2024/1139/text.html",
+  "scope": "country",
+  "countries": ["POL"],
+  "verifiedAt": "2026-11-13",
+  "license": "Official legislative text; only short list entries are quoted",
+  "entries": [
+    {
+      "substance": "codeine",
+      "status": "restricted",
+      "quote": "Załącznik nr 2, ŚRODKI ODURZAJĄCE GRUPY II-N: KODEINA",
+      "note": "Group II-N: may be used only for medical, industrial or research purposes (Act Art. 33(1)); possession only by authorised persons (Art. 34). Group III-N covers some low-dose codeine preparations. Control-list classification, not a personal-import rule."
+    },
+    {
+      "substance": "morphine",
+      "status": "restricted",
+      "quote": "Załącznik nr 2, ŚRODKI ODURZAJĄCE GRUPY I-N: MORFINA",
+      "note": "Group I-N: may be used only for medical, industrial or research purposes (Act Art. 33(1)); possession only by authorised persons (Art. 34). Control-list classification, not a personal-import rule."
+    },
+    {
+      "substance": "methylphenidate",
+      "status": "restricted",
+      "quote": "Załącznik nr 1, SUBSTANCJE PSYCHOTROPOWE GRUPY II-P: METYLOFENIDAT",
+      "note": "Group II-P: may be used only for medical, industrial or research purposes (Act Art. 33(1)); possession only by authorised persons (Art. 34). Control-list classification, not a personal-import rule."
+    },
+    {
+      "substance": "amphetamine",
+      "status": "restricted",
+      "quote": "Załącznik nr 1, SUBSTANCJE PSYCHOTROPOWE GRUPY II-P: AMFETAMINA",
+      "note": "Group II-P: may be used only for medical, industrial or research purposes (Act Art. 33(1)); possession only by authorised persons (Art. 34). Control-list classification, not a personal-import rule."
+    },
+    {
+      "substance": "diazepam",
+      "status": "restricted",
+      "quote": "Załącznik nr 1, SUBSTANCJE PSYCHOTROPOWE GRUPY IV-P: DIAZEPAM",
+      "note": "Group IV-P: may be used only for medical, industrial or research purposes (Act Art. 33(1)); possession only by authorised persons (Art. 34). Control-list classification, not a personal-import rule."
+    },
+    {
+      "substance": "alprazolam",
+      "status": "restricted",
+      "quote": "Załącznik nr 1, SUBSTANCJE PSYCHOTROPOWE GRUPY IV-P: ALPRAZOLAM",
+      "note": "Group IV-P: may be used only for medical, industrial or research purposes (Act Art. 33(1)); possession only by authorised persons (Art. 34). Control-list classification, not a personal-import rule."
+    },
+    {
+      "substance": "zolpidem",
+      "status": "restricted",
+      "quote": "Załącznik nr 1, SUBSTANCJE PSYCHOTROPOWE GRUPY IV-P: ZOLPIDEM",
+      "note": "Group IV-P: may be used only for medical, industrial or research purposes (Act Art. 33(1)); possession only by authorised persons (Art. 34). Control-list classification, not a personal-import rule."
+    },
+    {
+      "substance": "cannabis",
+      "status": "restricted",
+      "quote": "Załącznik nr 2, ŚRODKI ODURZAJĄCE GRUPY I-N: KONOPI ZIELE innych niż włókniste oraz wyciągi, nalewki farmaceutyczne, a także wszystkie inne wyciągi z konopi innych niż włókniste",
+      "note": "Group I-N: medical, industrial or research use only (Act Art. 33(1)); non-medical use is not permitted. Medical cannabis is covered by Art. 33a. Control-list classification, not a personal-import rule."
+    }
+  ]
+}

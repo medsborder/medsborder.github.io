@@ -1,0 +1,61 @@
+name: Test, audit and deploy to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build -t medsborder-test . && docker run --rm medsborder-test
+
+  # axe (WCAG A/AA, light and dark, desktop and mobile) and Lighthouse with
+  # thresholds from audit/thresholds.json. A failure blocks the deploy.
+  audit:
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: ./scripts/stage-site.sh
+      - run: docker build -t medsborder-audit audit
+      - run: |
+          mkdir -p audit/out
+          docker run --rm --shm-size=1g --user "$(id -u):$(id -g)" \
+            -v "$PWD/_site":/site:ro -v "$PWD/audit/out":/audit/out medsborder-audit
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: audit-reports
+          path: audit/out
+          retention-days: 14
+
+  deploy:
+    needs: [test, audit]
+    if: github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - run: ./scripts/stage-site.sh
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+      - id: deployment
+        uses: actions/deploy-pages@v4

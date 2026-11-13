@@ -1,0 +1,67 @@
+{
+  "id": "de-btmg-anlage-iii",
+  "title": "Germany: Narcotics Act (BtMG), Anlage III (verkehrsfähige und verschreibungsfähige Betäubungsmittel), unofficial online text of the annex (gesetze-im-internet.de); the page shows no edition date",
+  "url": "https://www.gesetze-im-internet.de/btmg_1981/anlage_iii.html",
+  "scope": "country",
+  "countries": [
+    "DEU"
+  ],
+  "verifiedAt": "2026-11-13",
+  "license": "Official legislative text; only short list entries are quoted",
+  "entries": [
+    {
+      "substance": "morphine",
+      "status": "prescription",
+      "quote": "Anlage III: Morphin",
+      "note": "Annex III: tradable and prescribable narcotic. Narrow exceptions exist for very low-concentration preparations (up to 0.015% morphine base, not easily recoverable) and ornamental poppy plants."
+    },
+    {
+      "substance": "codeine",
+      "status": "prescription",
+      "quote": "Anlage III: Codein (3-Methylmorphin), ausgenommen in Zubereitungen, die ohne einen weiteren Stoff der Anlagen I bis III bis zu 2,5 vom Hundert oder je abgeteilte Form bis zu 100 mg Codein, berechnet als Base, enthalten",
+      "note": "Annex III: tradable and prescribable narcotic. Preparations without another Annex I-III substance, up to 2.5% or up to 100 mg codeine (base) per divided dose, are excepted; for codeine and dihydrocodeine the import, export and transit narcotics rules do not apply to such excepted preparations. Stricter prescribing rules still apply if prescribed to people dependent on narcotics or alcohol."
+    },
+    {
+      "substance": "methylphenidate",
+      "status": "prescription",
+      "quote": "Anlage III: Methylphenidat",
+      "note": "Annex III: tradable and prescribable narcotic. No exception for preparations."
+    },
+    {
+      "substance": "amphetamine",
+      "status": "prescription",
+      "quote": "Anlage III: Amfetamin (Amphetamin)",
+      "note": "Annex III: tradable and prescribable narcotic. No exception for preparations."
+    },
+    {
+      "substance": "lisdexamfetamine",
+      "status": "prescription",
+      "quote": "Anlage III: Lisdexamfetamin",
+      "note": "Annex III: tradable and prescribable narcotic. No exception for preparations."
+    },
+    {
+      "substance": "diazepam",
+      "status": "prescription",
+      "quote": "Anlage III: Diazepam, ausgenommen in Zubereitungen, die ohne einen weiteren Stoff der Anlagen I bis III bis zu 1 vom Hundert als Sirup oder Tropflösung, jedoch nicht mehr als 250 mg je Packungseinheit, oder je abgeteilte Form bis zu 10 mg Diazepam enthalten",
+      "note": "Annex III: tradable and prescribable narcotic. Preparations without another Annex I-III substance, up to 1% as syrup or drops (max 250 mg per pack) or up to 10 mg diazepam per divided dose, are excepted. Excepted preparations are not treated as narcotics, but the narcotics rules on import, export and transit still apply to them (Annex III footnote)."
+    },
+    {
+      "substance": "alprazolam",
+      "status": "prescription",
+      "quote": "Anlage III: Alprazolam, ausgenommen in Zubereitungen, die ohne einen weiteren Stoff der Anlagen I bis III je abgeteilte Form bis zu 1 mg Alprazolam enthalten",
+      "note": "Annex III: tradable and prescribable narcotic. Preparations without another Annex I-III substance, up to 1 mg alprazolam per divided dose, are excepted. Excepted preparations are not treated as narcotics, but the narcotics rules on import, export and transit still apply to them (Annex III footnote)."
+    },
+    {
+      "substance": "zolpidem",
+      "status": "prescription",
+      "quote": "Anlage III: Zolpidem, ausgenommen in Zubereitungen zur oralen Anwendung, die ohne einen weiteren Stoff der Anlagen I bis III je abgeteilte Form bis zu 8,5 mg Zolpidem, berechnet als Base, enthalten",
+      "note": "Annex III: tradable and prescribable narcotic. Oral preparations without another Annex I-III substance, up to 8.5 mg zolpidem (base) per divided dose, are excepted. Excepted preparations are not treated as narcotics, but the narcotics rules on import, export and transit still apply to them (Annex III footnote)."
+    },
+    {
+      "substance": "poppy-seeds",
+      "status": "allowed",
+      "quote": "Anlage III: Papaver somniferum (Pflanzen und Pflanzenteile, ausgenommen die Samen, der zur Art Papaver somniferum (einschließlich der Unterart setigerum) gehörenden Pflanzen)",
+      "note": "Poppy seeds are expressly excluded from the controlled plant entry, so they are not a narcotic under the BtMG. Customs, food and quantity rules were not checked; this does not cover poppy straw or opium."
+    }
+  ]
+}

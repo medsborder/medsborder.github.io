@@ -1,0 +1,41 @@
+{
+  "id": "fr-arrete-1990-stupefiants",
+  "title": "France: Arrêté du 22 février 1990 fixant la liste des substances classées comme stupéfiants (Légifrance consolidation; its data were last updated 23 May 2021, ANSM decisions since 2022 are not incorporated)",
+  "url": "https://www.legifrance.gouv.fr/loda/id/JORFTEXT000000533085",
+  "scope": "country",
+  "countries": ["FRA"],
+  "verifiedAt": "2026-11-13",
+  "license": "Official legislative text; only short list entries are quoted",
+  "entries": [
+    {
+      "substance": "morphine",
+      "status": "restricted",
+      "quote": "Annexe I: Morphine (y compris les préparations d'opium en renfermant plus de 20 p. 100 exprimé en base anhydre ...)",
+      "note": "Classified as a narcotic (stupéfiant), Annex I. Control-list classification, not a personal-import rule; see French customs guidance on carrying narcotic medicines (original prescription, quantity for the prescribed treatment or 28 days)."
+    },
+    {
+      "substance": "methylphenidate",
+      "status": "restricted",
+      "quote": "Annexe III: Méthylphénidate",
+      "note": "Classified as a narcotic (stupéfiant), Annex III. Control-list classification, not a personal-import rule; see French customs guidance on carrying narcotic medicines (original prescription, quantity for the prescribed treatment or 28 days)."
+    },
+    {
+      "substance": "amphetamine",
+      "status": "restricted",
+      "quote": "Annexe III: Amphétamine, à l'exception de la préparation présentée en comprimés et renfermant par comprimé : sulfate d'amphétamine 0,005 g, phénobarbital 0,100 g",
+      "note": "Classified as a narcotic (stupéfiant), Annex III, except one named tablet preparation. Control-list classification, not a personal-import rule; see French customs guidance on carrying narcotic medicines (original prescription, quantity for the prescribed treatment or 28 days)."
+    },
+    {
+      "substance": "lisdexamfetamine",
+      "status": "restricted",
+      "quote": "Annexe IV: Lisdexamphétamine et ses sels",
+      "note": "Classified as a narcotic (stupéfiant), Annex IV. Control-list classification, not a personal-import rule; see French customs guidance on carrying narcotic medicines (original prescription, quantity for the prescribed treatment or 28 days)."
+    },
+    {
+      "substance": "cannabis",
+      "status": "restricted",
+      "quote": "Annexe I: Cannabis et résine de cannabis",
+      "note": "Classified as a narcotic (stupéfiant), Annex I. This list alone does not say whether any personal or medical carriage is allowed; treat as high risk. Control-list classification, not a personal-import rule."
+    }
+  ]
+}

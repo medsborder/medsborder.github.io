@@ -1,0 +1,10 @@
+/* TEAM */
+Maintainers: the MedsBorder project
+Site: https://github.com/medsborder/medsborder.github.io
+
+/* SITE */
+Last update: 2026/11/13
+Languages: English, Ukrainian
+Standards: HTML5, CSS3, ECMAScript modules (no frameworks, no bundler)
+Hosting: GitHub Pages
+Note: results must be verified independently; this is not legal or medical advice.

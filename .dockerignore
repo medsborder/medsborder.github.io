@@ -1,0 +1,6 @@
+.git
+data-raw
+node_modules
+audit/out
+audit/node_modules
+_site

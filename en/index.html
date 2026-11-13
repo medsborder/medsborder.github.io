@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>MedsBorder: travel medication checker</title>
+  <meta name="description" content="Check whether your medicines are allowed, need a prescription or are banned in the countries on your route.">
+  <meta name="color-scheme" content="light dark">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self' 'sha256-opRjTqQ1E5eUpc4SE9v3YoU5wuVpgtqT7zsobCj245Q=' https://*.googletagmanager.com; style-src 'self'; img-src 'self' data: https://*.google-analytics.com https://*.googletagmanager.com; connect-src 'self' https://*.google-analytics.com https://*.analytics.google.com https://*.googletagmanager.com; base-uri 'self'; form-action 'self'; object-src 'none'; manifest-src 'self'">
+  <link rel="canonical" href="https://medsborder.github.io/en/">
+  <link rel="alternate" hreflang="en" href="https://medsborder.github.io/en/">
+  <link rel="alternate" hreflang="uk" href="https://medsborder.github.io/uk/">
+  <link rel="alternate" hreflang="x-default" href="https://medsborder.github.io/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="MedsBorder">
+  <meta property="og:title" content="MedsBorder: travel medication checker">
+  <meta property="og:description" content="Check whether your medicines are allowed, need a prescription or are banned in the countries on your route.">
+  <meta property="og:url" content="https://medsborder.github.io/en/">
+  <meta property="og:image" content="https://medsborder.github.io/assets/og/og-en.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Screenshot-style card: MedsBorder, travel medication checker. Statuses: allowed, prescription, banned.">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="uk_UA">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="MedsBorder: travel medication checker">
+  <meta name="twitter:description" content="Check whether your medicines are allowed, need a prescription or are banned in the countries on your route.">
+  <meta name="twitter:image" content="https://medsborder.github.io/assets/og/og-en.png">
+  <meta name="twitter:image:alt" content="Screenshot-style card: MedsBorder, travel medication checker. Statuses: allowed, prescription, banned.">
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "@id": "https://medsborder.github.io/en/#app",
+      "name": "MedsBorder",
+      "url": "https://medsborder.github.io/en/",
+      "description": "Check whether your medicines are allowed, need a prescription or are banned in the countries on your route.",
+      "applicationCategory": "TravelApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript",
+      "inLanguage": "en",
+      "isAccessibleForFree": true,
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://medsborder.github.io/en/#faq",
+      "inLanguage": "en",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Can I take my medicines to another country?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It depends on the country and on the ingredient. Medicines that contain controlled substances, such as some painkillers, sleeping pills and ADHD medicines, often need a prescription, a doctor’s certificate or a permit, and some countries ban substances that are common elsewhere. Check every country on your route and carry the original packaging and prescription."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Do layovers matter?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Rules for transit can differ from rules for entry, and some countries apply their controls even when you only change planes. Add your layovers to the route to see them in the results."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What does “no data” mean?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "It means we have no verified source for that ingredient in that country. It never means the ingredient is allowed. Use the links to official sources or ask the embassy or customs of that country."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I check an ingredient that is not in the list?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Yes. Type its name and add it as a custom ingredient. We have no data for it, so you get links to search for it yourself."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Are the ingredients and countries I enter sent anywhere?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Everything is calculated in your browser and we have no server that receives your input. Only if you click a Google or ChatGPT link are the names sent to those services. See the privacy policy for details."
+          }
+        }
+      ]
+    }
+  ]
+}
+  </script>
+  <script>try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.dataset.theme=t}catch(e){}</script>
+  <link rel="icon" href="../favicon.ico" sizes="48x48">
+  <link rel="icon" href="../assets/icons/icon.svg" type="image/svg+xml" sizes="any">
+  <link rel="apple-touch-icon" href="../assets/icons/apple-touch-icon.png">
+  <link rel="manifest" href="../site.webmanifest">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0f172a" media="(prefers-color-scheme: dark)">
+  <link rel="stylesheet" href="../assets/css/main.css">
+  <script type="module" src="../assets/js/ui/app.js"></script>
+  <script type="module" src="../assets/js/consent.js"></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="../" aria-label="MedsBorder home">MedsBorder</a>
+    <nav aria-label="Site">
+      <a href="../uk/" hreflang="uk" lang="uk">Українська</a>
+      <span id="theme-slot"></span>
+    </nav>
+  </header>
+  <main class="static">
+    <h1>Travel medication checker</h1>
+    <p>Enter the active ingredients you take and the countries on your route: departure, layovers and destinations. You get a status per country, conclusions and links to check the rules yourself. Everything runs in your browser; what you type is not sent to us.</p>
+    <p class="disclaimer" role="note"><strong>Check the result independently.</strong> This is not legal or medical advice. Rules change, and the data may be incomplete or out of date. “No data” never means “allowed”.</p>
+    <noscript><p class="notice">The checker needs JavaScript. Without it you can still use the Google and ChatGPT links on the official sources linked below.</p></noscript>
+    <div id="app"></div>
+    <h2>How it works</h2>
+    <ol>
+      <li>Add at least one required active ingredient. Type a name or add your own.</li>
+      <li>Choose the departure country, any layovers and up to nine more countries in total.</li>
+      <li>Press Check. You see warnings when rules differ along the route, then conclusions and a table by country with sources.</li>
+    </ol>
+    <section class="faq" aria-labelledby="faq-title">
+      <h2 id="faq-title">FAQ</h2>
+      <details><summary>Can I take my medicines to another country?</summary><p>It depends on the country and on the ingredient. Medicines that contain controlled substances, such as some painkillers, sleeping pills and ADHD medicines, often need a prescription, a doctor’s certificate or a permit, and some countries ban substances that are common elsewhere. Check every country on your route and carry the original packaging and prescription.</p></details>
+      <details><summary>Do layovers matter?</summary><p>Yes. Rules for transit can differ from rules for entry, and some countries apply their controls even when you only change planes. Add your layovers to the route to see them in the results.</p></details>
+      <details><summary>What does “no data” mean?</summary><p>It means we have no verified source for that ingredient in that country. It never means the ingredient is allowed. Use the links to official sources or ask the embassy or customs of that country.</p></details>
+      <details><summary>Can I check an ingredient that is not in the list?</summary><p>Yes. Type its name and add it as a custom ingredient. We have no data for it, so you get links to search for it yourself.</p></details>
+      <details><summary>Are the ingredients and countries I enter sent anywhere?</summary><p>No. Everything is calculated in your browser and we have no server that receives your input. Only if you click a Google or ChatGPT link are the names sent to those services. See the privacy policy for details.</p></details>
+    </section>
+  </main>
+  <footer class="site-footer"><p>Data comes from official lists with a “verified” date. Found a mistake? Please open an issue in the project repository.</p><p><a href="privacy/">Privacy and cookies</a> · <a href="terms/">Terms and disclaimer</a> · <button type="button" class="linklike" data-cookie-settings>Cookie settings</button></p></footer>
+</body>
+</html>
