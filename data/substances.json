@@ -1,0 +1,182 @@
+[
+  {
+    "id": "codeine",
+    "inn": "codeine",
+    "atc": ["R05DA04"],
+    "names": { "en": ["Codeine"], "uk": ["Кодеїн"] },
+    "brands": ["Solpadeine", "Nurofen Plus"],
+    "category": "opioid",
+    "common": true,
+    "alternatives": ["paracetamol", "ibuprofen"]
+  },
+  {
+    "id": "tramadol",
+    "inn": "tramadol",
+    "atc": ["N02AX02"],
+    "names": { "en": ["Tramadol"], "uk": ["Трамадол"] },
+    "brands": ["Tramal"],
+    "category": "opioid",
+    "common": false,
+    "alternatives": ["paracetamol", "ibuprofen"]
+  },
+  {
+    "id": "morphine",
+    "inn": "morphine",
+    "atc": ["N02AA01"],
+    "names": { "en": ["Morphine"], "uk": ["Морфін"] },
+    "brands": [],
+    "category": "opioid",
+    "common": false,
+    "alternatives": []
+  },
+  {
+    "id": "methylphenidate",
+    "inn": "methylphenidate",
+    "atc": ["N06BA04"],
+    "names": { "en": ["Methylphenidate"], "uk": ["Метилфенідат"] },
+    "brands": ["Ritalin", "Concerta"],
+    "category": "stimulant",
+    "common": false,
+    "alternatives": []
+  },
+  {
+    "id": "lisdexamfetamine",
+    "inn": "lisdexamfetamine",
+    "atc": ["N06BA12"],
+    "names": { "en": ["Lisdexamfetamine"], "uk": ["Лісдексамфетамін"] },
+    "brands": ["Vyvanse", "Elvanse"],
+    "category": "stimulant",
+    "common": false,
+    "alternatives": []
+  },
+  {
+    "id": "amphetamine",
+    "inn": "amphetamine",
+    "atc": ["N06BA01"],
+    "names": { "en": ["Amphetamine"], "uk": ["Амфетамін"] },
+    "brands": ["Adderall"],
+    "category": "stimulant",
+    "common": false,
+    "alternatives": []
+  },
+  {
+    "id": "diazepam",
+    "inn": "diazepam",
+    "atc": ["N05BA01"],
+    "names": { "en": ["Diazepam"], "uk": ["Діазепам"] },
+    "brands": ["Valium"],
+    "category": "benzodiazepine",
+    "common": false,
+    "alternatives": []
+  },
+  {
+    "id": "alprazolam",
+    "inn": "alprazolam",
+    "atc": ["N05BA12"],
+    "names": { "en": ["Alprazolam"], "uk": ["Алпразолам"] },
+    "brands": ["Xanax"],
+    "category": "benzodiazepine",
+    "common": false,
+    "alternatives": []
+  },
+  {
+    "id": "zolpidem",
+    "inn": "zolpidem",
+    "atc": ["N05CF02"],
+    "names": { "en": ["Zolpidem"], "uk": ["Золпідем"] },
+    "brands": ["Ambien", "Stilnox"],
+    "category": "sleep-aid",
+    "common": true,
+    "alternatives": []
+  },
+  {
+    "id": "melatonin",
+    "inn": "melatonin",
+    "atc": ["N05CH01"],
+    "names": { "en": ["Melatonin"], "uk": ["Мелатонін"] },
+    "brands": [],
+    "category": "sleep-aid",
+    "common": true,
+    "alternatives": []
+  },
+  {
+    "id": "pregabalin",
+    "inn": "pregabalin",
+    "atc": ["N03AX16"],
+    "names": { "en": ["Pregabalin"], "uk": ["Прегабалін"] },
+    "brands": ["Lyrica"],
+    "category": "anticonvulsant",
+    "common": false,
+    "alternatives": []
+  },
+  {
+    "id": "gabapentin",
+    "inn": "gabapentin",
+    "atc": ["N03AX12"],
+    "names": { "en": ["Gabapentin"], "uk": ["Габапентин"] },
+    "brands": ["Neurontin"],
+    "category": "anticonvulsant",
+    "common": false,
+    "alternatives": []
+  },
+  {
+    "id": "pseudoephedrine",
+    "inn": "pseudoephedrine",
+    "atc": ["R01BA02"],
+    "names": { "en": ["Pseudoephedrine"], "uk": ["Псевдоефедрин"] },
+    "brands": ["Sudafed"],
+    "category": "decongestant",
+    "common": true,
+    "alternatives": []
+  },
+  {
+    "id": "cannabis",
+    "inn": null,
+    "atc": [],
+    "names": { "en": ["Cannabis", "Marijuana"], "uk": ["Канабіс", "Марихуана", "Коноплі"] },
+    "brands": [],
+    "category": "cannabinoid",
+    "common": true,
+    "alternatives": []
+  },
+  {
+    "id": "cannabidiol",
+    "inn": "cannabidiol",
+    "atc": ["N03AX24"],
+    "names": { "en": ["Cannabidiol", "CBD"], "uk": ["Канабідіол", "CBD"] },
+    "brands": ["Epidyolex"],
+    "category": "cannabinoid",
+    "common": true,
+    "alternatives": []
+  },
+  {
+    "id": "poppy-seeds",
+    "inn": null,
+    "atc": [],
+    "names": { "en": ["Poppy seeds", "Poppy seed bun"], "uk": ["Мак харчовий", "Булочка з маком"] },
+    "brands": [],
+    "category": "food",
+    "common": true,
+    "alternatives": []
+  },
+  {
+    "id": "paracetamol",
+    "inn": "paracetamol",
+    "atc": ["N02BE01"],
+    "names": { "en": ["Paracetamol", "Acetaminophen"], "uk": ["Парацетамол", "Ацетамінофен"] },
+    "brands": ["Panadol", "Tylenol"],
+    "category": "analgesic",
+    "common": false,
+    "alternatives": []
+  },
+  {
+    "id": "ibuprofen",
+    "inn": "ibuprofen",
+    "atc": ["M01AE01"],
+    "names": { "en": ["Ibuprofen"], "uk": ["Ібупрофен"] },
+    "brands": ["Nurofen", "Advil"],
+    "category": "analgesic",
+    "common": false,
+    "alternatives": []
+  }
+]
