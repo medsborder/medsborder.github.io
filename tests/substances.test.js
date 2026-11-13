@@ -1,7 +1,8 @@
-const test = require("node:test");
-const assert = require("node:assert");
-const substances = require("../data/substances.json");
-const countries = require("../data/countries.json");
+import test from "node:test";
+import assert from "node:assert";
+import { readJson } from "./helpers.js";
+const substances = readJson("data/substances.json");
+const countries = readJson("data/countries.json");
 
 const CATEGORIES = new Set([
   "opioid", "stimulant", "benzodiazepine", "sleep-aid", "anticonvulsant",

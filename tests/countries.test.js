@@ -1,6 +1,7 @@
-const test = require("node:test");
-const assert = require("node:assert");
-const countries = require("../data/countries.json");
+import test from "node:test";
+import assert from "node:assert";
+import { readJson } from "./helpers.js";
+const countries = readJson("data/countries.json");
 
 test("alpha3 codes are unique, 3 uppercase letters", () => {
   const codes = countries.map((c) => c.alpha3);
