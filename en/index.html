@@ -19,14 +19,14 @@
   <meta property="og:image" content="https://medsborder.github.io/assets/og/og-en.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="Screenshot-style card: MedsBorder, travel medication checker. Statuses: allowed, prescription, banned.">
+  <meta property="og:image:alt" content="MedsBorder card: “Can I take my medicines across the border?” with an example result showing allowed, prescription and banned statuses.">
   <meta property="og:locale" content="en_US">
   <meta property="og:locale:alternate" content="uk_UA">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="MedsBorder: travel medication checker">
   <meta name="twitter:description" content="Check whether your medicines are allowed, need a prescription or are banned in the countries on your route.">
   <meta name="twitter:image" content="https://medsborder.github.io/assets/og/og-en.png">
-  <meta name="twitter:image:alt" content="Screenshot-style card: MedsBorder, travel medication checker. Statuses: allowed, prescription, banned.">
+  <meta name="twitter:image:alt" content="MedsBorder card: “Can I take my medicines across the border?” with an example result showing allowed, prescription and banned statuses.">
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -90,7 +90,7 @@
           "name": "Are the ingredients and countries I enter sent anywhere?",
           "acceptedAnswer": {
             "@type": "Answer",
-            "text": "No. Everything is calculated in your browser and we have no server that receives your input. Only if you click a Google or ChatGPT link are the names sent to those services. See the privacy policy for details."
+            "text": "No. Everything is calculated in your browser and we have no server that receives your input. Only if you click a Google or AI assistant link (ChatGPT, Claude, Perplexity, Gemini) are the names sent to those services. See the privacy policy for details."
           }
         }
       ]
@@ -111,33 +111,66 @@
 </head>
 <body>
   <header class="site-header">
-    <a class="brand" href="../" aria-label="MedsBorder home">MedsBorder</a>
+    <a class="brand" href="../" aria-label="MedsBorder home"><img class="brand-mark" src="../assets/icons/icon.svg" alt="" width="28" height="28"><span>MedsBorder</span></a>
     <nav aria-label="Site">
       <a href="../uk/" hreflang="uk" lang="uk">Українська</a>
       <span id="theme-slot"></span>
     </nav>
   </header>
   <main class="static">
-    <h1>Travel medication checker</h1>
-    <p>Enter the active ingredients you take and the countries on your route: departure, layovers and destinations. You get a status per country, conclusions and links to check the rules yourself. Everything runs in your browser; what you type is not sent to us.</p>
+    <section class="hero hero-split" aria-labelledby="hero-title">
+      <div class="hero-text">
+      <h1 id="hero-title">Travel medication checker</h1>
+      <p class="lead">Can I take my medicines across the border? Add your medicines and your route, and get a clear answer for every country, with official sources.</p>
+      <ul class="trust">
+      <li><svg class="svg-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg><span>Official lists, each with a “verified” date</span></li>
+      <li><svg class="svg-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg><span>Runs in your browser; what you type is not sent to us</span></li>
+      <li><svg class="svg-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg><span>English and Ukrainian, layovers included</span></li>
+      </ul>
+      </div>
+      <aside class="example" aria-labelledby="example-title">
+        <p class="example-title" id="example-title"><strong>Example result</strong> <span class="muted">Illustration, not real data</span></p>
+        <p class="verdict status-banned"><span class="verdict-title"><svg class="svg-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M6 6l12 12"/></svg> Banned or restricted in 1 of 3 countries</span></p>
+        <ul class="example-list">
+        <li class="status-banned"><svg class="svg-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M6 6l12 12"/></svg><span><strong>Do not bring</strong>: Medicine X: Country C</span></li>
+        <li class="status-prescription"><svg class="svg-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4"/><path d="M10 12h5M10 16h5"/></svg><span><strong>Prepare</strong>: Medicine X: Country B (prescription)</span></li>
+        <li class="status-allowed"><svg class="svg-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/></svg><span><strong>No known restrictions</strong>: Medicine X: Country A</span></li>
+        </ul>
+      </aside>
+    </section>
     <p class="disclaimer" role="note"><strong>Check the result independently.</strong> This is not legal or medical advice. Rules change, and the data may be incomplete or out of date. “No data” never means “allowed”.</p>
-    <noscript><p class="notice">The checker needs JavaScript. Without it you can still use the Google and ChatGPT links on the official sources linked below.</p></noscript>
+    <noscript><p class="notice">The checker needs JavaScript. Without it you can still read the guidance and FAQ below and search the official sources of each country yourself.</p></noscript>
     <div id="app"></div>
-    <h2>How it works</h2>
-    <ol>
-      <li>Add at least one required active ingredient. Type a name or add your own.</li>
-      <li>Choose the departure country, any layovers and up to nine more countries in total.</li>
-      <li>Press Check. You see warnings when rules differ along the route, then conclusions and a table by country with sources.</li>
-    </ol>
+    <section class="how" aria-labelledby="how-title">
+      <h2 id="how-title">How it works</h2>
+      <ol class="how-steps">
+      <li><span class="how-icon"><svg class="svg-icon" viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="3" y="9" width="18" height="6" rx="3" transform="rotate(-45 12 12)"/><path d="M9.5 9.5l5 5"/></svg></span><div><strong>Add your medicines</strong><p>Type an active ingredient or tap a common one. You can add your own.</p></div></li>
+      <li><span class="how-icon"><svg class="svg-icon" viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M3 20h18M5 15l3-8 4 3 5-5 2 2-5 8z"/></svg></span><div><strong>Add your route</strong><p>Departure, layovers and up to ten countries in total. Countries with data are marked.</p></div></li>
+      <li><span class="how-icon"><svg class="svg-icon" viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/></svg></span><div><strong>Read the answer</strong><p>A one-line verdict, what to do (do not bring, prepare, check yourself), your medicines along the route, and sources.</p></div></li>
+      </ol>
+    </section>
+    <section class="coverage" aria-labelledby="coverage-title">
+      <h2 id="coverage-title">What we cover</h2>
+      <p>We only answer where we have an official source. For other countries you get a clear “no data” and links to check the rules yourself. “No data” never means “allowed”.</p>
+      <ul id="coverage-list" class="coverage-list"><li class="muted">The list of covered countries is shown when JavaScript is on.</li></ul>
+    </section>
+    <section class="examples" aria-labelledby="examples-title">
+      <h2 id="examples-title">Try an example</h2>
+      <ul class="examples-list">
+      <li><a href="#r=codeine&amp;from=UKR&amp;via=POL&amp;to=DEU">Codeine: Ukraine → Poland → Germany</a></li>
+      <li><a href="#r=zolpidem,melatonin&amp;from=DEU&amp;to=FRA">Zolpidem and melatonin: Germany → France</a></li>
+      <li><a href="#r=methylphenidate&amp;from=POL&amp;via=FRA&amp;to=DEU">Methylphenidate: Poland → France → Germany</a></li>
+      </ul>
+    </section>
     <section class="faq" aria-labelledby="faq-title">
       <h2 id="faq-title">FAQ</h2>
       <details><summary>Can I take my medicines to another country?</summary><p>It depends on the country and on the ingredient. Medicines that contain controlled substances, such as some painkillers, sleeping pills and ADHD medicines, often need a prescription, a doctor’s certificate or a permit, and some countries ban substances that are common elsewhere. Check every country on your route and carry the original packaging and prescription.</p></details>
       <details><summary>Do layovers matter?</summary><p>Yes. Rules for transit can differ from rules for entry, and some countries apply their controls even when you only change planes. Add your layovers to the route to see them in the results.</p></details>
       <details><summary>What does “no data” mean?</summary><p>It means we have no verified source for that ingredient in that country. It never means the ingredient is allowed. Use the links to official sources or ask the embassy or customs of that country.</p></details>
       <details><summary>Can I check an ingredient that is not in the list?</summary><p>Yes. Type its name and add it as a custom ingredient. We have no data for it, so you get links to search for it yourself.</p></details>
-      <details><summary>Are the ingredients and countries I enter sent anywhere?</summary><p>No. Everything is calculated in your browser and we have no server that receives your input. Only if you click a Google or ChatGPT link are the names sent to those services. See the privacy policy for details.</p></details>
+      <details><summary>Are the ingredients and countries I enter sent anywhere?</summary><p>No. Everything is calculated in your browser and we have no server that receives your input. Only if you click a Google or AI assistant link (ChatGPT, Claude, Perplexity, Gemini) are the names sent to those services. See the privacy policy for details.</p></details>
     </section>
   </main>
-  <footer class="site-footer"><p>Data comes from official lists with a “verified” date. Found a mistake? Please open an issue in the project repository.</p><p><a href="privacy/">Privacy and cookies</a> · <a href="terms/">Terms and disclaimer</a> · <button type="button" class="linklike" data-cookie-settings>Cookie settings</button></p></footer>
+  <footer class="site-footer"><p>Data comes from official lists with a “verified” date. Found a mistake? Please open an issue in the project repository.</p><p><a href="privacy/">Privacy and cookies</a> · <a href="terms/">Terms and disclaimer</a> · <a href="sources/">Sources and coverage</a> · <button type="button" class="linklike" data-cookie-settings>Cookie settings</button></p></footer>
 </body>
 </html>

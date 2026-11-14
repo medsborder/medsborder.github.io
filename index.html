@@ -19,14 +19,14 @@
   <meta property="og:image" content="https://medsborder.github.io/assets/og/og-en.png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
-  <meta property="og:image:alt" content="Screenshot-style card: MedsBorder, travel medication checker. Statuses: allowed, prescription, banned.">
+  <meta property="og:image:alt" content="MedsBorder card: “Can I take my medicines across the border?” with an example result showing allowed, prescription and banned statuses.">
   <meta property="og:locale" content="en_US">
   <meta property="og:locale:alternate" content="uk_UA">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="MedsBorder: travel medication checker · перевірка ліків для подорожі">
   <meta name="twitter:description" content="Travel medication checker / Перевірка ліків для подорожі">
   <meta name="twitter:image" content="https://medsborder.github.io/assets/og/og-en.png">
-  <meta name="twitter:image:alt" content="Screenshot-style card: MedsBorder, travel medication checker. Statuses: allowed, prescription, banned.">
+  <meta name="twitter:image:alt" content="MedsBorder card: “Can I take my medicines across the border?” with an example result showing allowed, prescription and banned statuses.">
   <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -48,16 +48,72 @@
   <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
   <meta name="theme-color" content="#0f172a" media="(prefers-color-scheme: dark)">
   <link rel="stylesheet" href="assets/css/main.css">
+  <script type="module" src="assets/js/landing.js"></script>
   <script type="module" src="assets/js/consent.js"></script>
 </head>
 <body>
-  <main>
-    <h1>MedsBorder</h1>
-    <ul>
-      <li><a href="en/" hreflang="en" lang="en">English</a></li>
-      <li><a href="uk/" hreflang="uk" lang="uk">Українська</a></li>
-    </ul>
+  <header class="site-header">
+    <a class="brand" href="./" aria-label="MedsBorder"><img class="brand-mark" src="assets/icons/icon.svg" alt="" width="28" height="28"><span>MedsBorder</span></a>
+    <nav aria-label="Language"><a href="en/" hreflang="en" lang="en">English</a> <a href="uk/" hreflang="uk" lang="uk">Українська</a></nav>
+  </header>
+  <main class="static landing">
+    <h1 class="sr-only">MedsBorder: travel medication checker · перевірка ліків для подорожі</h1>
+    <p id="lang-hint" class="notice" lang="uk" hidden>Ваш браузер українською. <a href="uk/" hreflang="uk">Відкрити українською →</a></p>
+    <div class="landing-cols">
+    <section class="hero landing-col" lang="en" aria-labelledby="en-h">
+      <h2 id="en-h">Travel medication checker</h2>
+      <p class="lead">Can I take my medicines across the border? Add your medicines and your route, and get a clear answer for every country, with official sources.</p>
+      <p><a class="btn primary" href="en/" hreflang="en">Open the checker</a></p>
+      <ul class="trust">
+          <li><svg class="svg-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg><span>Official lists, each with a “verified” date</span></li>
+          <li><svg class="svg-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg><span>Runs in your browser; nothing you type is sent to us</span></li>
+          <li><svg class="svg-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg><span>Layovers included</span></li>
+      </ul>
+      <aside class="example" aria-labelledby="en-ex">
+        <p class="example-title" id="en-ex"><strong>Example result</strong> <span class="muted">Illustration, not real data</span></p>
+        <p class="verdict status-banned"><span class="verdict-title"><svg class="svg-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M6 6l12 12"/></svg> Banned or restricted in 1 of 3 countries</span></p>
+        <ul class="example-list">
+        <li class="status-banned"><svg class="svg-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M6 6l12 12"/></svg><span><strong>Do not bring</strong>: Medicine X: Country C</span></li>
+        <li class="status-prescription"><svg class="svg-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4"/><path d="M10 12h5M10 16h5"/></svg><span><strong>Prepare</strong>: Medicine X: Country B (prescription)</span></li>
+        <li class="status-allowed"><svg class="svg-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/></svg><span><strong>No known restrictions</strong>: Medicine X: Country A</span></li>
+        </ul>
+      </aside>
+      <h3>How it works</h3>
+      <ol class="landing-steps">
+          <li>Add your medicines</li>
+          <li>Add your route</li>
+          <li>Read the answer: do not bring, prepare, check yourself</li>
+      </ol>
+      <p><a href="en/sources/" hreflang="en">Sources and coverage</a></p>
+    </section>
+    <section class="hero landing-col" lang="uk" aria-labelledby="uk-h">
+      <h2 id="uk-h">Перевірка ліків для подорожі</h2>
+      <p class="lead">Чи можна провезти ліки через кордон? Додайте ліки й маршрут і отримайте зрозумілу відповідь для кожної країни з офіційними джерелами.</p>
+      <p><a class="btn primary" href="uk/" hreflang="uk">Відкрити перевірку</a></p>
+      <ul class="trust">
+          <li><svg class="svg-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg><span>Офіційні переліки, кожен із датою «перевірено»</span></li>
+          <li><svg class="svg-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg><span>Працює у вашому браузері; те, що ви вводите, нам не надсилається</span></li>
+          <li><svg class="svg-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/></svg><span>З урахуванням пересадок</span></li>
+      </ul>
+      <aside class="example" aria-labelledby="uk-ex">
+        <p class="example-title" id="uk-ex"><strong>Приклад результату</strong> <span class="muted">Ілюстрація, не реальні дані</span></p>
+        <p class="verdict status-banned"><span class="verdict-title"><svg class="svg-icon" viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M6 6l12 12"/></svg> Заборонено або обмежено в 1 з 3 країн</span></p>
+        <ul class="example-list">
+        <li class="status-banned"><svg class="svg-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M6 6l12 12"/></svg><span><strong>Не везіть</strong>: Ліки X: Країна В</span></li>
+        <li class="status-prescription"><svg class="svg-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M7 3h7l4 4v14H7z"/><path d="M14 3v4h4"/><path d="M10 12h5M10 16h5"/></svg><span><strong>Підготуйте</strong>: Ліки X: Країна Б (за рецептом)</span></li>
+        <li class="status-allowed"><svg class="svg-icon" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="9"/><path d="M8 12.5l3 3 5-6"/></svg><span><strong>Відомих обмежень немає</strong>: Ліки X: Країна А</span></li>
+        </ul>
+      </aside>
+      <h3>Як це працює</h3>
+      <ol class="landing-steps">
+          <li>Додайте ліки</li>
+          <li>Додайте маршрут</li>
+          <li>Прочитайте відповідь: не везіть, підготуйте, перевірте самі</li>
+      </ol>
+      <p><a href="uk/sources/" hreflang="uk">Джерела й покриття</a></p>
+    </section>
+    </div>
   </main>
-  <footer class="site-footer"><p><a href="en/privacy/">Privacy and cookies</a> · <a href="uk/privacy/">Конфіденційність і cookie</a> · <a href="en/terms/">Terms</a> · <a href="uk/terms/">Умови</a> · <button type="button" class="linklike" data-cookie-settings>Cookie settings</button></p></footer>
+  <footer class="site-footer"><p><a href="en/privacy/">Privacy and cookies</a> · <a href="uk/privacy/">Конфіденційність і cookie</a> · <a href="en/terms/">Terms</a> · <a href="uk/terms/">Умови</a> · <a href="en/sources/">Sources</a> · <a href="uk/sources/">Джерела</a> · <button type="button" class="linklike" data-cookie-settings>Cookie settings</button></p></footer>
 </body>
 </html>

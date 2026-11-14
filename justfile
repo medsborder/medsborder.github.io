@@ -25,7 +25,14 @@ assets:
 sitemap:
     docker run --rm -v "$PWD":/work -w /work node:22-alpine node scripts/sitemap.mjs $(date +%F) > sitemap.xml
 
-# Copy the publishable files into _site/
+# Build the production site into _site/ (bundled JS, one data file; in Docker)
+build: stage
+
+# Regenerate the "Coverage and sources" pages from data/ (in Docker)
+sources-page:
+    docker run --rm --user $(id -u):$(id -g) -v "$PWD":/work -w /work node:22-alpine node scripts/gen-sources-page.mjs
+
+# Copy the publishable files into _site/ and bundle them
 stage:
     ./scripts/stage-site.sh
 

@@ -2,7 +2,7 @@
 # Renders icons and Open Graph images from design/*.svg. Runs inside Docker
 # (see `just assets`); the generated files are committed.
 set -eu
-apk add --no-cache rsvg-convert imagemagick ttf-dejavu >/dev/null
+apk add --no-cache rsvg-convert imagemagick ttf-dejavu font-inter >/dev/null
 
 mkdir -p assets/icons assets/og
 cp design/icon.svg assets/icons/icon.svg

@@ -30,7 +30,11 @@ See `LICENSE`.
 
 ## Quality gates
 
-`just test` runs the unit and static tests (Node, in Docker). `just audit` stages the publishable files into `_site/` and audits them in a real Chromium (Docker, reports in `audit/out/`):
+`just build` (alias of `just stage`, Docker) writes the production site to `_site/`: all JS is bundled and minified with esbuild into `assets/app.<hash>.js` (checker pages) and `assets/consent.<hash>.js` (other pages), all data is merged into one `assets/data.<hash>.json`, and the HTML is rewritten to point at them. The sources in `assets/js/` and `data/` stay as they are, so `just serve` works without a build and the tests import the modules directly.
+
+`just sources-page` (Docker) regenerates `en/sources/` and `uk/sources/` ("Coverage and sources": every country and source with its date, what the statuses mean, and a table of substances by country) from `data/`. Run it after changing anything in `data/`; `just test` fails when the committed pages are stale.
+
+`just test` runs the unit and static tests (Node, in Docker). `just audit` stages the publishable files into `_site/` and audits them in a real Chromium (axe, Lighthouse and an end-to-end walk through the wizard in `audit/e2e.mjs`, in English and Ukrainian) (Docker, reports in `audit/out/`):
 
 - **axe-core**: WCAG 2.0/2.1/2.2 A and AA plus best practices, on 20 states (language, banner shown or dismissed, results, light and dark, desktop and mobile). Zero violations allowed. Also fails on JavaScript errors, failed requests and Content-Security-Policy violations.
 - **Lighthouse (mobile)**: thresholds in `audit/thresholds.json` (performance and best practices/SEO at least 0.9/0.95, accessibility 1).
@@ -44,3 +48,13 @@ Layout shifts matter here: the form and the theme switcher are added by JavaScri
 - `just test` includes an offline check of every link and asset written in the static HTML (files exist, `#fragments` have an id, new-tab links use `rel="noopener noreferrer"`).
 - `just check-links` (needs network, Docker) requests every source URL in `data/sources` and every external link in the pages, and lists sources whose `verifiedAt` is older than a year or about to be. Results: `ok`, `broken` (404/410, unknown domain, certificate error, a deep link that redirects to a home page) and `unverified` (HTTP 401/403/429/5xx, timeouts, DNS hiccups). Government sites often block bots, so `unverified` only asks for a manual look; only `broken` fails the run (`--strict` also fails on `unverified`). A permanent redirect is reported with the new address to store. The report is written to `audit/out/links.json`.
 - `.github/workflows/links.yml` runs it every Monday and on demand. When a source is re-verified, update its `verifiedAt` in the same change.
+
+## AI assistant links
+
+The results page builds one prompt for the whole trip (`assets/js/core/prompt.js`) and links to ChatGPT, Claude, Perplexity and Gemini (`assets/js/core/assistants.js`). Checked on 2026-11-14:
+
+- Claude documents `https://claude.ai/new?q=...`: the text is filled in and the user presses send (long text is cut at about 14,000 characters).
+- ChatGPT (`https://chatgpt.com/?q=`) and Perplexity (`https://www.perplexity.ai/search?q=`) accept `q` but do not document it; ChatGPT does not auto-send.
+- Gemini has no documented parameter, so it opens empty and the prompt is pasted.
+- Every click also copies the prompt to the clipboard, and prompts whose encoded URL is over 8,000 characters are not put in the URL. These formats are not under our control: re-check them when a link stops filling in the prompt.
+

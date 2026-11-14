@@ -1,19 +1,33 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" font-family="DejaVu Sans, sans-serif">
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" font-family="Inter, DejaVu Sans, sans-serif">
+  <defs><clipPath id="left"><rect x="0" y="0" width="256" height="512"/></clipPath></defs>
   <rect width="1200" height="630" fill="#0f172a"/>
-  <rect width="16" height="630" fill="#1d4ed8"/>
-  <g transform="translate(80 70) scale(0.3)">
+  <rect width="1200" height="8" fill="#1d4ed8"/>
+  <text x="80" y="160" font-size="56" font-weight="700" fill="#ffffff">Чи можна провезти</text>
+  <text x="80" y="236" font-size="56" font-weight="700" fill="#ffffff">ліки через</text>
+  <text x="80" y="312" font-size="56" font-weight="700" fill="#ffffff">кордон?</text>
+  <text x="80" y="386" font-size="28" fill="#cbd5e1">Перевірте кожну країну на маршруті,</text>
+  <text x="80" y="426" font-size="28" fill="#cbd5e1">з пересадками, з офіційними джерелами.</text>
+  <g transform="translate(80 486) scale(0.15625)">
     <rect width="512" height="512" rx="112" fill="#1d4ed8"/>
-    <g transform="rotate(-45 256 256)">
-      <rect x="96" y="184" width="320" height="144" rx="72" fill="#ffffff"/>
-      <path d="M256 184h88a72 72 0 0 1 0 144h-88z" fill="#93c5fd"/>
-      <rect x="251" y="184" width="10" height="144" fill="#1d4ed8"/>
-    </g>
+    <g transform="rotate(-45 256 256)"><rect x="76" y="176" width="360" height="160" rx="80" fill="none" stroke="#ffffff" stroke-width="28"/></g>
+    <g clip-path="url(#left)"><g transform="rotate(-45 256 256)"><rect x="76" y="176" width="360" height="160" rx="80" fill="#ffffff"/></g></g>
+    <line x1="256" y1="32" x2="256" y2="480" stroke="#fbbf24" stroke-width="64" stroke-dasharray="96 32"/>
   </g>
-  <text x="260" y="175" font-size="84" font-weight="700" fill="#ffffff">MedsBorder</text>
-  <text x="80" y="330" font-size="54" font-weight="700" fill="#ffffff">Перевірка ліків для подорожі</text>
-  <text x="80" y="400" font-size="32" fill="#cbd5e1">Перевірте, чи дозволені ваші ліки, чи потрібен</text>
-  <text x="80" y="446" font-size="32" fill="#cbd5e1">рецепт або вони заборонені на вашому маршруті.</text>
-  <circle cx="94" cy="545" r="16" fill="#22c55e"/><text x="124" y="556" font-size="30" fill="#e2e8f0">Дозволено</text>
-  <circle cx="414" cy="545" r="16" fill="#f59e0b"/><text x="444" y="556" font-size="30" fill="#e2e8f0">За рецептом</text>
-  <circle cx="774" cy="545" r="16" fill="#ef4444"/><text x="804" y="556" font-size="30" fill="#e2e8f0">Заборонено</text>
+  <text x="176" y="540" font-size="44" font-weight="700" fill="#ffffff">MedsBorder</text>
+  <rect x="700" y="100" width="420" height="430" rx="28" fill="#1e293b" stroke="#334155" stroke-width="2"/>
+  <text x="732" y="158" font-size="28" font-weight="700" fill="#ffffff">Приклад результату</text>
+  <text x="732" y="194" font-size="22" fill="#94a3b8">Ілюстрація, не реальні дані</text>
+  <line x1="732" y1="222" x2="1088" y2="222" stroke="#334155" stroke-width="2"/>
+  <text x="732" y="298" font-size="26" fill="#e2e8f0">Країна А</text>
+  <rect x="868" y="262" width="220" height="56" rx="28" fill="#14532d"/>
+  <circle cx="898" cy="290" r="14" fill="#22c55e"/><path d="M891 290l5 5 10-11" fill="none" stroke="#0f172a" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="922" y="299" font-size="24" font-weight="600" fill="#dcfce7">Дозволено</text>
+  <text x="732" y="390" font-size="26" fill="#e2e8f0">Країна Б</text>
+  <rect x="868" y="354" width="220" height="56" rx="28" fill="#78350f"/>
+  <circle cx="898" cy="382" r="14" fill="#f59e0b"/><text x="898" y="391" font-size="22" font-weight="800" text-anchor="middle" fill="#0f172a">!</text>
+  <text x="922" y="391" font-size="24" font-weight="600" fill="#fef3c7">За рецептом</text>
+  <text x="732" y="482" font-size="26" fill="#e2e8f0">Країна В</text>
+  <rect x="868" y="446" width="220" height="56" rx="28" fill="#7f1d1d"/>
+  <circle cx="898" cy="474" r="14" fill="#ef4444"/><path d="M892 468l12 12M904 468l-12 12" stroke="#0f172a" stroke-width="4" stroke-linecap="round"/>
+  <text x="922" y="483" font-size="24" font-weight="600" fill="#fee2e2">Заборонено</text>
 </svg>

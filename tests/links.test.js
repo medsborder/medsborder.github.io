@@ -34,6 +34,7 @@ test("fragment links point to an existing id", () => {
   for (const file of FILES) {
     for (const href of refs(read(file)).filter((h) => h.includes("#"))) {
       const frag = href.split("#")[1];
+      if (frag.includes("=")) continue; // checker state (#r=codeine&from=...), not an element id
       const target = href.startsWith("#") ? file : targetFile(file, href);
       if (!target.endsWith(".html") || !frag) continue;
       assert.ok(new RegExp(`id="${frag}"`).test(read(target)), `${file}: ${href} has no matching id`);

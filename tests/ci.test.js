@@ -30,3 +30,9 @@ test("a weekly workflow checks the source links", () => {
   assert.match(wf, /cron:/);
   assert.ok(wf.includes("scripts/check-links.mjs") && wf.includes("upload-artifact"));
 });
+
+test("the end-to-end walk runs inside the audit, so it blocks the deploy", () => {
+  assert.match(read("audit/run.mjs"), /import \{ runE2E \} from "\.\/e2e\.mjs"[\s\S]*await runE2E\(\{ browser, base: BASE, fail \}\)/);
+  assert.ok(read("audit/Dockerfile").includes("e2e.mjs"));
+  assert.ok(read("audit/e2e.mjs").includes("data-action"));
+});

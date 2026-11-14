@@ -6,6 +6,10 @@ What is done and what is still missing on MedsBorder. Everything here is a plan,
 
 ## Done
 
+- Three-step wizard (medicines, route, results) with a verdict, a "what to do" list (do not bring / prepare / check yourself), a timeline along the route and an alternative route; every ingredient is treated equally.
+- One prompt for the whole trip (EN/UK, optional "what we found") with copy and links to ChatGPT, Claude, Perplexity and Gemini; Google searches for paperwork (doctor, online consultation, translation) and for each country's embassy and customs.
+- Home page with a hero, trust points, quick picks for common medicines and countries with data, icons and flags (flags only for countries that have data; a test keeps them in step), coverage list, examples, "Report incorrect data" (prefilled GitHub issue), copy summary and print/PDF sheet.
+- "Coverage and sources" pages (EN/UK) generated from the data and checked against it by a test; an end-to-end walk through the wizard runs in the audit and blocks the deploy.
 - Bilingual (EN/UK) static site, light/dark/system theme, accessible form (ARIA combobox), results table (cards on mobile), conclusions, recommendations, route-conflict warnings, shareable links.
 - Consent banner and Google Tag Manager loaded only after consent; privacy and cookie policy; terms of use and disclaimer.
 - SEO (metadata, JSON-LD, sitemap, icons, social cards), CSP, axe and Lighthouse gates, link checks, unit tests.
@@ -29,7 +33,7 @@ What is done and what is still missing on MedsBorder. Everything here is a plan,
 
 ## Product
 
-- [ ] Save the last request locally (optional); print view and "copy summary".
+- [ ] Save the last request locally (optional).
 - [ ] Departure country as its own rules (export), not only context.
 - [ ] Programmatic pages such as "medicine X in country Y" (SEO) once the data is broad enough.
 - [ ] Offline support (PWA).
@@ -38,7 +42,7 @@ What is done and what is still missing on MedsBorder. Everything here is a plan,
 
 - [ ] First full run of the CI pipeline on `main` (test, audit, deploy) and a review of the weekly link-check report.
 - [ ] Scheduled data-refresh reminders from stale `verifiedAt` dates.
-- [ ] Contribution guide and an issue template "Report incorrect data".
+- [ ] Contribution guide (the "Report incorrect data" issue template exists).
 - [ ] Manual checks: keyboard-only and screen-reader pass, real-device mobile test.
 
 ## Legal and ownership
