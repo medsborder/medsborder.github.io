@@ -1,3 +1,4 @@
+import { disclaimerGate } from "./disclaimer.js";
 import { STORAGE_KEY, encodeChoice, storedChoice, GA_COOKIE, cookieDomains } from "./core/consent.js";
 
 export const GTM_ID = "GTM-WJMLCVGW";
@@ -141,7 +142,10 @@ function init() {
   }
   const choice = storedChoice();
   if (choice) apply(choice);
-  else show(false);
+  // The disclaimer dialog is shown whatever the cookie choice is. One overlay at a time:
+  // the cookie banner (only if no choice yet) waits for the dialog.
+  const gate = disclaimerGate(lang);
+  if (!choice) gate.then(() => show(false));
 }
 
 if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
