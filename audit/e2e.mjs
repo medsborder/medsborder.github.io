@@ -2,7 +2,11 @@
 // browser, in English and Ukrainian. Called from run.mjs, so CI runs it with the axe and Lighthouse
 // checks and a failure blocks the deploy.
 const wait = (ms) => new Promise((r) => setTimeout(r, ms));
-const CONSENT = () => localStorage.setItem("consent", JSON.stringify({ v: 1, analytics: false, at: new Date().toISOString() }));
+const CONSENT = () => {
+  const at = new Date().toISOString();
+  localStorage.setItem("consent", JSON.stringify({ v: 1, analytics: false, at }));
+  localStorage.setItem("disclaimer", JSON.stringify({ v: 1, at }));
+};
 
 const LANGS = [
   ["en", { ing: "codeine", from: "Ukraine", via: "Poland", to: "Germany" }],
@@ -146,6 +150,33 @@ export async function runE2E({ browser, base, fail }) {
     await page.evaluateOnNewDocument(CONSENT);
     await page.goto(`${base}/${lang}/`, { waitUntil: "networkidle0" });
     ok((await page.$$(".hero .example .example-list li")).length === 3, `${lang}: example result in the hero`);
+    await page.close();
+  }
+
+  // the disclaimer dialog: shown even with a stored cookie choice and a results link, cannot be escaped, gone after the checkbox
+  for (const lang of ["en", "uk"]) {
+    const page = await browser.newPage();
+    // the browser profile is shared with earlier scenarios: start without an acknowledgement, keep it on reload
+    await page.evaluateOnNewDocument(() => {
+      localStorage.setItem("consent", JSON.stringify({ v: 1, analytics: false, at: new Date().toISOString() }));
+      if (!sessionStorage.getItem("seeded")) { localStorage.removeItem("disclaimer"); sessionStorage.setItem("seeded", "1"); }
+    });
+    await page.goto(`${base}/${lang}/#r=codeine&from=DEU&to=POL`, { waitUntil: "networkidle0" });
+    const open = () => page.$eval("dialog.gate", (d) => d.open).catch(() => false);
+    ok(await open(), `${lang}: disclaimer dialog is shown although a cookie choice exists`);
+    ok((await page.$("#app form, #app table, #app .results")) === null && (await page.$eval("#app", (e) => e.textContent.trim())) === "",
+      `${lang}: nothing is rendered behind the dialog`);
+    for (let i = 0; i < 3; i += 1) await page.keyboard.press("Escape");
+    ok(await open(), `${lang}: Escape (pressed 3 times) does not dismiss the disclaimer dialog`);
+    ok(await page.$eval("dialog.gate .btn", (b) => b.disabled), `${lang}: continue is disabled until the checkbox is ticked`);
+    await page.click("#gate-check");
+    ok(await page.$eval("dialog.gate .btn", (b) => !b.disabled), `${lang}: ticking the checkbox enables continue`);
+    await page.click("dialog.gate .btn");
+    ok(!(await open()) && !(await page.$("dialog.gate")), `${lang}: dialog is gone after continuing`);
+    await page.waitForSelector("#app form", { timeout: 5000 }).catch(() => {});
+    ok((await page.$("#app form")) !== null, `${lang}: the checker and results render after continuing`);
+    await page.reload({ waitUntil: "networkidle0" });
+    ok(!(await page.$("dialog.gate")), `${lang}: acknowledgement is remembered`);
     await page.close();
   }
 

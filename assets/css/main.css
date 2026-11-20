@@ -183,6 +183,18 @@ body { padding-bottom: calc(1rem + var(--consent-h, 0px)); }
 .consent-actions .btn { flex: 1 1 12rem; }
 @media print { .consent { display: none; } }
 
+.gate { width: min(36rem, calc(100vw - 2rem)); max-height: calc(100vh - 2rem); overflow: auto; padding: 1.25rem 1.5rem; border: 1px solid var(--border); border-top: 4px solid var(--warn-border); border-radius: 10px; background: var(--bg); color: var(--fg); box-shadow: var(--shadow); }
+.gate::backdrop { background: rgb(15 23 42 / .75); }
+.gate h2 { margin: 0 0 .5rem; font-size: 1.25rem; }
+.gate ul { padding-left: 1.25rem; }
+.gate li { margin: .35rem 0; }
+.gate-check { display: flex; gap: .75rem; align-items: flex-start; padding: .75rem; margin: 1rem 0; border: 1px solid var(--border); border-radius: 8px; background: var(--surface); cursor: pointer; }
+.gate-check input { flex: none; width: 1.4rem; height: 1.4rem; margin-top: .1rem; accent-color: var(--accent); }
+.gate .btn { width: 100%; }
+.gate .btn:disabled { opacity: .55; cursor: not-allowed; }
+.gate-open { overflow: hidden; }
+@media print { .gate { display: none; } }
+
 .faq details { border: 1px solid var(--border); border-radius: 8px; padding: .5rem .9rem; margin: .5rem 0; }
 .faq details[open] { background: var(--surface); }
 .faq p { margin: .5rem 0; }

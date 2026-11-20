@@ -59,6 +59,7 @@ const BASE = `http://localhost:${server.address().port}`;
 
 // ---------- scenarios ----------
 const DENIED = JSON.stringify({ v: 1, analytics: false, at: new Date().toISOString() });
+const ACK = JSON.stringify({ v: 1, at: new Date().toISOString() });
 const RESULTS = "#r=codeine,poppy-seeds,~my%20herbal%20tea&o=melatonin&from=UKR&via=POL&to=DEU,FRA";
 const PAGES = ["/", "/en/", "/uk/", "/en/privacy/", "/uk/privacy/", "/en/terms/", "/uk/terms/", "/en/sources/", "/uk/sources/", "/404.html"];
 const DESKTOP = { width: 1280, height: 900, deviceScaleFactor: 1 };
@@ -66,17 +67,22 @@ const MOBILE = { width: 375, height: 800, deviceScaleFactor: 2, isMobile: true, 
 
 const scenarios = [];
 for (const p of PAGES) {
-  scenarios.push({ name: `${p} banner light desktop`, url: p, storage: {}, scheme: "light", viewport: DESKTOP });
-  scenarios.push({ name: `${p} clean dark mobile`, url: p, storage: { consent: DENIED, theme: "dark" }, scheme: "dark", viewport: MOBILE });
+  scenarios.push({ name: `${p} banner light desktop`, url: p, storage: { disclaimer: ACK }, scheme: "light", viewport: DESKTOP });
+  scenarios.push({ name: `${p} clean dark mobile`, url: p, storage: { disclaimer: ACK, consent: DENIED, theme: "dark" }, scheme: "dark", viewport: MOBILE });
 }
 for (const p of ["/en/", "/uk/"]) {
-  scenarios.push({ name: `${p} results light desktop`, url: p + RESULTS, storage: { consent: DENIED }, scheme: "light", viewport: DESKTOP, results: true });
-  scenarios.push({ name: `${p} results dark mobile`, url: p + RESULTS, storage: { consent: DENIED, theme: "dark" }, scheme: "dark", viewport: MOBILE, results: true });
+  scenarios.push({ name: `${p} results light desktop`, url: p + RESULTS, storage: { disclaimer: ACK, consent: DENIED }, scheme: "light", viewport: DESKTOP, results: true });
+  scenarios.push({ name: `${p} results dark mobile`, url: p + RESULTS, storage: { disclaimer: ACK, consent: DENIED, theme: "dark" }, scheme: "dark", viewport: MOBILE, results: true });
 }
 
 for (const p of ["/en/", "/uk/"]) {
-  scenarios.push({ name: `${p} step 2 light desktop`, url: p + "#r=codeine&o=melatonin&from=UKR&via=POL&step=2", storage: { consent: DENIED }, scheme: "light", viewport: DESKTOP });
-  scenarios.push({ name: `${p} step 1 dark mobile`, url: p + "#r=codeine&step=1", storage: { consent: DENIED, theme: "dark" }, scheme: "dark", viewport: MOBILE });
+  scenarios.push({ name: `${p} step 2 light desktop`, url: p + "#r=codeine&o=melatonin&from=UKR&via=POL&step=2", storage: { disclaimer: ACK, consent: DENIED }, scheme: "light", viewport: DESKTOP });
+  scenarios.push({ name: `${p} step 1 dark mobile`, url: p + "#r=codeine&step=1", storage: { disclaimer: ACK, consent: DENIED, theme: "dark" }, scheme: "dark", viewport: MOBILE });
+}
+
+for (const p of ["/en/", "/uk/"]) {
+  scenarios.push({ name: `${p} disclaimer dialog light desktop`, url: p, storage: {}, scheme: "light", viewport: DESKTOP });
+  scenarios.push({ name: `${p} disclaimer dialog dark mobile`, url: p, storage: { theme: "dark" }, scheme: "dark", viewport: MOBILE });
 }
 
 const AXE_TAGS = ["wcag2a", "wcag2aa", "wcag21a", "wcag21aa", "wcag22aa", "best-practice"];

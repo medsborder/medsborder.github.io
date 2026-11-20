@@ -9,6 +9,7 @@ import { worstOf } from "../core/status.js";
 import { coveredCountries, POPULAR_COUNTRIES } from "../core/coverage.js";
 import { recommendCountries } from "../core/recommend.js";
 import { track } from "../analytics.js";
+import { disclaimerGate } from "../disclaimer.js";
 import { serializeState, parseState, customToken } from "../core/urlState.js";
 import { buildLinks, KINDS } from "../core/links.js";
 import { buildPrompt, PROMPT_LANGS } from "../core/prompt.js";
@@ -67,6 +68,9 @@ const VERDICT_KEY = { banned: "verdictBanned", prescription: "verdictPrescriptio
 async function init() {
   const slot = document.getElementById("app");
   initTheme(document.getElementById("theme-slot"));
+  // Nothing is rendered (no form, no results) until the disclaimer is acknowledged,
+  // so hiding the dialog with DevTools reveals an empty page, not results.
+  await disclaimerGate(lang);
   slot.replaceChildren(h("p", { class: "notice", role: "status" }, t.loading));
 
   let data;
